@@ -4491,6 +4491,11 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
+use-arconnect@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/use-arconnect/-/use-arconnect-1.0.1.tgz#e31284b1d996ea9be7eb6aead463571e9c18c123"
+  integrity sha512-yOIE1TRVuUKfFzIS+jACkc0sM9qYl02AzdBATzHttdu03YmbinKiq0FSIzEXkRtKkvu1PJNVu+jjLDlABcUTug==
+
 use-sync-external-store@1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.2.0.tgz#7dbefd6ef3fe4e767a0cf5d7287aacfb5846928a"

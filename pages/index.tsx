@@ -1,20 +1,18 @@
-import type { NextPage } from 'next';
 import Head from 'next/head';
-import Image from 'next/image';
-import Nav from '../components/Nav';
+import type { NextPage } from 'next';
 import styles from '../styles/Home.module.css';
 
 const Home: NextPage = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>EXM Data Indexing</title>
+        <title>Community News</title>
         <meta name='description' content='EXM Data Indexing Application' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
       <main>
-        <Nav />
+        <p>Posts go here</p>
       </main>
     </div>
   );
