@@ -1,5 +1,6 @@
 import React from 'react';
 import useArconnect from 'use-arconnect';
+import Link from 'next/link';
 import { PermissionType } from 'arconnect';
 
 const Nav = () => {
@@ -20,11 +21,18 @@ const Nav = () => {
   return (
     <>
       <ul>
-        <li>new</li>
-        <li>threads</li>
-        <li>comments</li>
-        <li>show</li>
-        <li>submit</li>
+        <li>
+          <Link href='/new'>new</Link>
+        </li>
+        <li>
+          <Link href='/threads'>threads</Link>
+        </li>
+        <li>
+          <Link href='/comments'>comments</Link>
+        </li>
+        <li>
+          <Link href='/submit'>submit</Link>
+        </li>
       </ul>
 
       <div>
