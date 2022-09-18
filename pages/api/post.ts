@@ -13,8 +13,6 @@ export default async function handler(
       function: 'createPost',
       title: 'Adobe buys Figma',
       url: 'https://adobebuysfigma.com',
-      description: 'This is certainly unreal',
-      upvotes: '0',
     };
 
     const writeExm = await exm.functions.write(functionID, input);
