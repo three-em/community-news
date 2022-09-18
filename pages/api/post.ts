@@ -23,7 +23,6 @@ export default async function handler(
       data: writeExm,
     });
   } catch (error) {
-    console.log(error);
     res.status(400).json({ message: 'ERROR', error });
   }
 }
