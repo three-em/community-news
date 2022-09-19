@@ -6,21 +6,18 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const exm = new Exm({ token: `${process.env.EXM_TOKEN}` });
-    const functionID: string = `${process.env.FUNCTION_ID}`;
+    const functionID = `${process.env.FUNCTION_ID}`,
+      exm = new Exm({
+        token: `${process.env.EXM_TOKEN}`,
+      });
 
-    const input = {
-      function: 'createPost',
-      title: 'Adobe buys Figma',
-      url: 'https://adobebuysfigma.com',
-    };
-
+    const { input } = req.body;
     const writeExm = await exm.functions.write(functionID, input);
-    res.status(2002).json({
-      messgae: 'success',
+
+    res.status(200).json({
       data: writeExm,
     });
   } catch (error) {
-    res.status(400).json({ message: 'ERROR', error });
+    res.status(400).json({ error });
   }
 }
