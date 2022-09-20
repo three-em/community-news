@@ -1,9 +1,41 @@
 export function handle(state, action) {
-  const { functionRole, title, url, description, upvotes } = action.input;
+
+  /**
+   *****POST FORMAT*****
+     const post = {
+      postID: '',
+      author: '',
+      title: '',
+      url: '',
+      description: '',
+      dateAndTime: '',
+      comments: [
+        {
+          author: '',
+          text: '',
+          replies: [
+            {
+              author: '',
+              text: '',
+            }
+          ]
+        }
+      ]
+
+    }
+   */
+
+
+  const { functionRole, postID, author, title, url, description, timeCreated, upvotes, comments, replies } = action.input;
 
   if (functionRole === 'createPost') {
-    state.posts.unshift({ title, url, description, upvotes });
+    state.posts.unshift({ postID, author, title, url, description, upvotes, timeCreated });
   };
+
+  // this is strictly for dev. Do not deploy to prod
+  if (functionRole === 'clearPosts') {
+    state.posts.length = 0;
+  }
 
   return { state };
 }
