@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
 import axios from 'axios';
-import { Exm, ContractType } from '@execution-machine/sdk';
+import Router from 'next/router';
+import React, { useState } from 'react';
 
 interface StateProps {
   title: string;
   url: string;
   description: string;
+  upvotes: number;
 }
 
 const Submit = () => {
@@ -13,22 +14,36 @@ const Submit = () => {
       title: '',
       url: '',
       description: '',
+      upvotes: 0,
     },
-    [formData, setFormData] = useState(initialState),
-    exm = new Exm({ token: `${process.env.EXM_TOKEN}` });
+    [formData, setFormData] = useState(initialState);
 
-  const handleSubmit = (event: React.SyntheticEvent) => event?.preventDefault();
+  const handleSubmit = async (event: React.SyntheticEvent) => {
+    try {
+      event?.preventDefault();
+      await axios.post('/api/post', {
+        input: {
+          functionRole: 'createPost',
+          title: formData.title,
+          url: formData.url,
+          description: formData.description,
+          upvotes: formData.upvotes,
+        },
+      });
+      setFormData({
+        ...formData,
+        title: '',
+        url: '',
+        description: '',
+      });
+      Router.push('/');
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.currentTarget.name]: e.currentTarget.value });
-  };
-
-  const submitForm = async () => {
-    axios
-      .post('https://api.exm.dev/api/transactions', formData)
-      .then((response) => {
-        console.log('RESPONSE', response.data);
-      });
   };
 
   return (
@@ -65,7 +80,7 @@ const Submit = () => {
           }}
         />
         <br />
-        <button onClick={() => submitForm()}>sumbit</button>
+        <button>Sumbit</button>
       </form>
     </main>
   );
