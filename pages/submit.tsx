@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Router from 'next/router';
+import { v4 as uuid } from 'uuid';
 import React, { useState } from 'react';
 
 interface StateProps {
@@ -20,10 +21,14 @@ const Submit = () => {
 
   const handleSubmit = async (event: React.SyntheticEvent) => {
     try {
+      const date = new Date();
       event?.preventDefault();
       await axios.post('/api/post', {
         input: {
           functionRole: 'createPost',
+          postID: uuid(),
+          author: 'codingknite', // todo - after connecting with ArConnect
+          timeCreated: [date.getHours(), date.getMinutes()],
           title: formData.title,
           url: formData.url,
           description: formData.description,
