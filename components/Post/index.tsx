@@ -25,7 +25,7 @@ const Post = ({
   return (
     <Styled.PostWrapper>
       <Styled.PostInfo>
-        <p>{num}</p>
+        <p>{num}.</p>
         <p>upvote</p>
         <p>
           {title} ({shortUrl})
