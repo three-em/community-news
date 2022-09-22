@@ -1,21 +1,13 @@
 import axios from 'axios';
 import { PermissionType } from 'arconnect';
 import React, { useState, useEffect } from 'react';
+import useWalletAddress from '../hooks/useWalletAddress';
 
 const Connect = () => {
   const [allUsers, setAllUsers] = useState([]),
-    [userName, setUserName] = useState(''),
-    [address, setAddress] = useState('');
+    [userName, setUserName] = useState('');
 
-  async function getWalletAddress() {
-    try {
-      const address = await window.arweaveWallet.getActiveAddress();
-      setAddress(address);
-      return address;
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  const walletAddress = useWalletAddress();
 
   useEffect(() => {
     const getAllUsers = async () => {
@@ -29,7 +21,6 @@ const Connect = () => {
     };
 
     getAllUsers();
-    getWalletAddress();
   }, []);
 
   const allUserNames = allUsers.map(
@@ -78,7 +69,7 @@ const Connect = () => {
         await axios.post('/api/connect', {
           input: {
             functionRole: 'addUser',
-            walletAddress: getWalletAddress(),
+            walletAddress,
             userName: userName.toLowerCase(),
           },
         });
@@ -87,7 +78,7 @@ const Connect = () => {
       }
     };
 
-    if (!address) {
+    if (!walletAddress) {
       await connectWallet();
       postUser();
     }
@@ -105,7 +96,7 @@ const Connect = () => {
         <p>username available</p>
       )}
 
-      {address ? (
+      {walletAddress ? (
         <h4>your Arconnect wallet is already connected to Community News</h4>
       ) : (
         <form action='' onSubmit={handleSubmit}>
