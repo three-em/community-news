@@ -7,6 +7,16 @@ const Connect = () => {
     [userName, setUserName] = useState(''),
     [address, setAddress] = useState('');
 
+  async function getWalletAddress() {
+    try {
+      const address = await window.arweaveWallet.getActiveAddress();
+      setAddress(address);
+      return address;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   useEffect(() => {
     const getAllUsers = async () => {
       try {
@@ -17,7 +27,9 @@ const Connect = () => {
         console.error(error);
       }
     };
+
     getAllUsers();
+    getWalletAddress();
   }, []);
 
   const allUserNames = allUsers.map(
@@ -28,6 +40,7 @@ const Connect = () => {
     }
   );
 
+  const validateUserNameFormat = () => /^[a-z0-9_]+$/i.test(userName);
   const validateUsername = () => !userName || allUserNames.includes(userName);
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -49,37 +62,35 @@ const Connect = () => {
     }
   };
 
-  const getWalletAddress = async () => {
-    try {
-      const address = await window.arweaveWallet.getActiveAddress();
-      setAddress(address);
-      return address;
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleSubmit = (e: React.SyntheticEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
 
-    const connectWallet = async () => await login();
+    const connectWallet = async () => {
+      try {
+        await login();
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
     const postUser = async () => {
       try {
-        const res = await axios.post('/api/connect', {
+        await axios.post('/api/connect', {
           input: {
             functionRole: 'addUser',
             walletAddress: getWalletAddress(),
-            userName,
+            userName: userName.toLowerCase(),
           },
         });
       } catch (error) {
         console.error(error);
       }
     };
-    // only send request once confirmed that user connected wallet
-    postUser();
-    connectWallet();
+
+    if (!address) {
+      await connectWallet();
+      postUser();
+    }
   };
 
   return (
@@ -88,36 +99,40 @@ const Connect = () => {
 
       {userName.length === 0 ? null : validateUsername() ? (
         <p>username not available</p>
+      ) : !validateUserNameFormat() ? (
+        <p>wrong format. use digits, numbers or underscore</p>
       ) : (
         <p>username available</p>
       )}
 
-      <form action='' onSubmit={handleSubmit}>
-        <label>
-          username:
-          <input
-            value={userName}
-            onChange={handleChange}
-            style={{
-              border: `${
-                allUserNames.includes(userName)
-                  ? '1.5px solid red'
-                  : '1.5px solid gray'
-              }`,
-              outline: 'none',
-            }}
-          />
-        </label>
+      {address ? (
+        <h4>your Arconnect wallet is already connected to Community News</h4>
+      ) : (
+        <form action='' onSubmit={handleSubmit}>
+          <label>
+            username:
+            <input
+              value={userName}
+              onChange={handleChange}
+              style={{
+                border: `${
+                  allUserNames.includes(userName)
+                    ? '1.5px solid red'
+                    : '1.5px solid gray'
+                }`,
+                outline: 'none',
+              }}
+            />
+          </label>
 
-        <button disabled={validateUsername()}>Connect</button>
-      </form>
+          <button disabled={validateUsername()}>Connect</button>
+        </form>
+      )}
     </>
   );
 };
 
 export default Connect;
 
-// todo
-
-// only send request once confirmed that user connected wallet
 // add loading state - homepage
+// add loading state - connect page
