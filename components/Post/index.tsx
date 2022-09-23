@@ -15,7 +15,7 @@ const Post = ({
   num,
   title,
   url,
-  userPosted, // todo
+  userPosted,
   timeCreated,
   numberOfComments, // todo
 }: PostProps) => {
