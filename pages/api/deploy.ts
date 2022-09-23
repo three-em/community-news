@@ -16,7 +16,7 @@ export default async function handler(
       ContractType.JS
     );
 
-    res.status(200).json({ message: 'success', data: deploymentResponse });
+    res.status(200).json({ data: deploymentResponse });
   } catch (error) {
     res.status(400).json({ error });
   }

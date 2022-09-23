@@ -2,18 +2,22 @@ import axios from 'axios';
 import { PermissionType } from 'arconnect';
 import React, { useState, useEffect } from 'react';
 import useWalletAddress from '../hooks/useWalletAddress';
+import Router from 'next/router';
+import useGetUser from '../hooks/useGetUser';
 
 const Connect = () => {
   const [allUsers, setAllUsers] = useState([]),
-    [userName, setUserName] = useState('');
+    [userName, setUserName] = useState(''),
+    user = useGetUser();
 
   const walletAddress = useWalletAddress();
 
   useEffect(() => {
     const getAllUsers = async () => {
       try {
-        const response = await axios.get('/api/allPosts');
-        const { users } = response.data.data;
+        const response = await fetch('/api/allPosts');
+        const getPosts = await response.json();
+        const { users } = getPosts.data;
         setAllUsers(users);
       } catch (error) {
         console.error(error);
@@ -66,10 +70,11 @@ const Connect = () => {
 
     const postUser = async () => {
       try {
+        const address = await window.arweaveWallet.getActiveAddress();
         await axios.post('/api/connect', {
           input: {
             functionRole: 'addUser',
-            walletAddress,
+            walletAddress: address,
             userName: userName.toLowerCase(),
           },
         });
@@ -80,7 +85,8 @@ const Connect = () => {
 
     if (!walletAddress) {
       await connectWallet();
-      postUser();
+      await postUser();
+      Router.push('/');
     }
   };
 
@@ -125,5 +131,4 @@ const Connect = () => {
 
 export default Connect;
 
-// add loading state - homepage
-// add loading state - connect page
+// todo - username must have 3 or more characters

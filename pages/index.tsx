@@ -1,44 +1,21 @@
-import axios from 'axios';
-import Link from 'next/link';
-import Head from 'next/head';
-import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import type { NextPage } from 'next';
+import Link from 'next/link';
+import Head from 'next/head';
+import Post from '../components/Post';
 import styles from '../styles/Home.module.css';
 
 interface PostProps {
-  num: number;
+  postID: string;
+  author: {
+    userName: string;
+  };
   title: string;
-  shortUrl: string;
-  userPosted: string;
-  timeCreated: string;
-  numberOfComments: number;
+  url: string;
+  description: string;
+  upvotes: number;
+  timeCreated: number;
 }
-
-const PostWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const PostInfo = styled.div`
-  display: flex;
-  gap: 0.5rem;
-  font-size: 14px;
-  margin-top: 0.4rem;
-
-  p {
-    margin: 0;
-  }
-`;
-
-const PostStats = styled.div`
-  display: flex;
-  font-size: 13px;
-
-  p {
-    margin: 0.3rem;
-  }
-`;
 
 const Home: NextPage = () => {
   const [posts, setPosts] = useState<any>([]);
@@ -46,8 +23,9 @@ const Home: NextPage = () => {
   useEffect(() => {
     const getAllPosts = async () => {
       try {
-        const response = await axios.get('/api/allPosts');
-        const { posts } = response.data.data;
+        const response = await fetch('/api/allPosts'),
+          getPosts = await response.json(),
+          { posts } = getPosts.data;
         setPosts(posts);
       } catch (error) {
         console.error(error);
@@ -55,38 +33,6 @@ const Home: NextPage = () => {
     };
     getAllPosts();
   }, []);
-
-  const Post = ({
-    num,
-    title,
-    shortUrl,
-    userPosted,
-    timeCreated,
-    numberOfComments,
-  }: PostProps) => {
-    return (
-      <PostWrapper>
-        <PostInfo>
-          <p>{num}</p>
-          <p>upvote</p>
-          <p>
-            {title} ({shortUrl})
-          </p>
-        </PostInfo>
-
-        <PostStats>
-          <p>
-            posted by {userPosted} {timeCreated} ago
-          </p>
-          <p>unvote</p>
-          <p>hide</p>
-          <p>
-            {numberOfComments > 0 ? `${numberOfComments} comments` : 'discuss'}
-          </p>
-        </PostStats>
-      </PostWrapper>
-    );
-  };
 
   return (
     <div className={styles.container}>
@@ -98,14 +44,14 @@ const Home: NextPage = () => {
 
       <main>
         {posts.length > 0 ? (
-          posts.map((post: any) => (
+          posts.map((post: PostProps) => (
             <Post
               key='1'
               num={posts.indexOf(post) + 1}
               title={post.title}
-              shortUrl='codingknite.com'
-              userPosted='codingknite'
-              timeCreated='50 minutes'
+              url={post.url}
+              userPosted={post.author.userName}
+              timeCreated={post.timeCreated}
               numberOfComments={10}
             />
           ))
@@ -121,3 +67,5 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+// todo - add loading state since we're not using getStaticProps
