@@ -1,22 +1,13 @@
 import React from 'react';
 import useArconnect from 'use-arconnect';
 import Link from 'next/link';
-import { PermissionType } from 'arconnect';
+import Router from 'next/router';
+import useGetUser from '../hooks/useGetUser';
+import useWalletAddress from '../hooks/useWalletAddress';
 
 const Nav = () => {
-  const arconnect = useArconnect();
-
-  const arConnectPermissions: PermissionType[] = [
-    'ACCESS_ADDRESS',
-    'ACCESS_ALL_ADDRESSES',
-    'SIGN_TRANSACTION',
-  ];
-
-  async function login() {
-    await window.arweaveWallet.connect(arConnectPermissions, {
-      name: 'CommunityLabs News',
-    });
-  }
+  const arconnect = useArconnect(),
+    currentUser = useGetUser();
 
   return (
     <>
@@ -36,8 +27,13 @@ const Nav = () => {
       </ul>
 
       <div>
-        <h3>codingknite</h3>
-        {(arconnect && <button onClick={login}>Connect</button>) || (
+        {currentUser.userName ? (
+          <p style={{ marginLeft: '1rem' }}>{currentUser.userName}</p>
+        ) : null}
+
+        {currentUser && arconnect && !currentUser.walletAddress ? (
+          <button onClick={() => Router.push('/connect')}>Connect</button>
+        ) : currentUser && currentUser.walletAddress ? null : (
           <button onClick={() => window.open('https://arconnect.io')}>
             Install ArConnect
           </button>
