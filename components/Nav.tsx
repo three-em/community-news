@@ -3,11 +3,10 @@ import useArconnect from 'use-arconnect';
 import Link from 'next/link';
 import Router from 'next/router';
 import useGetUser from '../hooks/useGetUser';
-import useWalletAddress from '../hooks/useWalletAddress';
 
 const Nav = () => {
   const arconnect = useArconnect(),
-    currentUser = useGetUser();
+    { currentUser } = useGetUser();
 
   return (
     <>
@@ -31,12 +30,12 @@ const Nav = () => {
           <p style={{ marginLeft: '1rem' }}>{currentUser.userName}</p>
         ) : null}
 
-        {currentUser && arconnect && !currentUser.walletAddress ? (
-          <button onClick={() => Router.push('/connect')}>Connect</button>
-        ) : currentUser && currentUser.walletAddress ? null : (
+        {arconnect === undefined ? (
           <button onClick={() => window.open('https://arconnect.io')}>
             Install ArConnect
           </button>
+        ) : currentUser.userName && currentUser.walletAddress ? null : (
+          <button onClick={() => Router.push('/connect')}>Connect</button>
         )}
       </div>
     </>

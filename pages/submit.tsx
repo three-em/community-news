@@ -17,13 +17,13 @@ const Submit = () => {
       description: '',
     },
     [formData, setFormData] = useState(initialState),
-    user = useGetUser();
+    { currentUser } = useGetUser();
 
   const handleSubmit = async (event: React.SyntheticEvent) => {
     try {
       event?.preventDefault();
-      if (user.userName && user.walletAddress) {
-        const { userName } = user;
+      if (currentUser.userName && currentUser.walletAddress) {
+        const { userName } = currentUser;
         await axios.post('/api/post', {
           input: {
             functionRole: 'createPost',
@@ -58,7 +58,8 @@ const Submit = () => {
   return (
     <main>
       <br />
-      {(user.userName && user.walletAddress && (
+
+      {currentUser.userName && currentUser.walletAddress ? (
         <form action='' onSubmit={handleSubmit}>
           <label htmlFor='title'>title</label>
           <input
@@ -92,7 +93,7 @@ const Submit = () => {
           <br />
           <button>Sumbit</button>
         </form>
-      )) || (
+      ) : (
         <>
           <p>Connect wallet to submit post</p>
           <button onClick={() => Router.push('/connect')}>Connect</button>

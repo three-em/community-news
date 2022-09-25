@@ -32,7 +32,7 @@ const Home: NextPage = () => {
       }
     };
     getAllPosts();
-  }, []);
+  }, [posts]);
 
   return (
     <div className={styles.container}>
