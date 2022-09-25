@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import useArConnect from 'use-arconnect';
 import useWalletAddress from './useWalletAddress';
 
 interface UserProps {
@@ -7,34 +8,39 @@ interface UserProps {
 }
 
 const useGetUser = () => {
-  const [allUsers, setAllUsers] = useState<UserProps[]>([]);
-  const address = useWalletAddress();
+  const [allUsers, setAllUsers] = useState<UserProps[]>([]),
+    [loading, setLoading] = useState(false),
+    address = useWalletAddress(),
+    arconnect = useArConnect();
+
+  let currentUser: UserProps = { userName: '', walletAddress: '' };
 
   useEffect(() => {
-    if (address) {
+    if (arconnect) {
       const getAllUsers = async () => {
         try {
+          setLoading(true);
           const fetchUsers = await fetch('/api/allPosts');
           if (fetchUsers.ok) {
             const res = await fetchUsers.json();
             const { users } = res.data;
             setAllUsers(users);
+            setLoading(false);
           }
         } catch (error) {
           console.error(error);
         }
       };
+
       getAllUsers();
     }
-  }, [address]);
-
-  let currentUser: UserProps = { userName: '', walletAddress: '' };
+  }, [arconnect]);
 
   allUsers.map((user) => {
     if (user.walletAddress === address) currentUser = user;
   });
 
-  return currentUser;
+  return { currentUser, loading };
 };
 
 export default useGetUser;
