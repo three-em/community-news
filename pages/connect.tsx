@@ -1,16 +1,13 @@
 import axios from 'axios';
 import { PermissionType } from 'arconnect';
 import React, { useState, useEffect } from 'react';
-import useWalletAddress from '../hooks/useWalletAddress';
 import Router from 'next/router';
 import useGetUser from '../hooks/useGetUser';
 
 const Connect = () => {
-  const [allUsers, setAllUsers] = useState([]),
-    [userName, setUserName] = useState(''),
-    user = useGetUser();
-
-  const walletAddress = useWalletAddress();
+  const [userName, setUserName] = useState(''),
+    [allUserNames, setAllUserNames] = useState<string[]>([]),
+    { currentUser } = useGetUser();
 
   useEffect(() => {
     const getAllUsers = async () => {
@@ -18,24 +15,20 @@ const Connect = () => {
         const response = await fetch('/api/allPosts');
         const getPosts = await response.json();
         const { users } = getPosts.data;
-        setAllUsers(users);
+
+        users.map((user: { walletAddress: string; userName: string }) => {
+          setAllUserNames(() => [...allUserNames, user.userName]);
+        });
       } catch (error) {
         console.error(error);
       }
     };
 
     getAllUsers();
-  }, []);
-
-  const allUserNames = allUsers.map(
-    (user: { walletAddress: string; userName: string }) => {
-      if (allUsers.length > 0) {
-        return user.userName;
-      }
-    }
-  );
+  });
 
   const validateUserNameFormat = () => /^[a-z0-9_]+$/i.test(userName);
+  const validateUserNameLength = () => userName.length > 3;
   const validateUsername = () => !userName || allUserNames.includes(userName);
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -83,7 +76,7 @@ const Connect = () => {
       }
     };
 
-    if (!walletAddress) {
+    if (!currentUser.userName && !currentUser.walletAddress) {
       await connectWallet();
       await postUser();
       Router.push('/');
@@ -98,11 +91,13 @@ const Connect = () => {
         <p>username not available</p>
       ) : !validateUserNameFormat() ? (
         <p>wrong format. use digits, numbers or underscore</p>
+      ) : !validateUserNameLength() ? (
+        <p>Username must have atleast 4 character</p>
       ) : (
         <p>username available</p>
       )}
 
-      {walletAddress ? (
+      {currentUser.userName && currentUser.walletAddress ? (
         <h4>your Arconnect wallet is already connected to Community News</h4>
       ) : (
         <form action='' onSubmit={handleSubmit}>
@@ -113,7 +108,8 @@ const Connect = () => {
               onChange={handleChange}
               style={{
                 border: `${
-                  allUserNames.includes(userName)
+                  allUserNames.includes(userName) ||
+                  (userName.length > 0 && !validateUserNameLength())
                     ? '1.5px solid red'
                     : '1.5px solid gray'
                 }`,
@@ -130,5 +126,3 @@ const Connect = () => {
 };
 
 export default Connect;
-
-// todo - username must have 3 or more characters
