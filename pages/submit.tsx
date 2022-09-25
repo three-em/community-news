@@ -1,8 +1,8 @@
 import { v4 as uuid } from 'uuid';
 import React, { useState } from 'react';
-import axios from 'axios';
 import Router from 'next/router';
 import useGetUser from '../hooks/useGetUser';
+import short from 'short-uuid';
 
 interface StateProps {
   title: string;
@@ -24,18 +24,24 @@ const Submit = () => {
       event?.preventDefault();
       if (currentUser.userName && currentUser.walletAddress) {
         const { userName } = currentUser;
-        await axios.post('/api/post', {
-          input: {
-            functionRole: 'createPost',
-            postID: uuid(),
-            author: {
-              userName,
+        await fetch('/api/addPost', {
+          method: 'POST',
+          body: JSON.stringify({
+            input: {
+              functionRole: 'createPost',
+              postID: uuid(),
+              author: {
+                userName,
+              },
+              timeCreated: new Date().getTime(),
+              title: formData.title,
+              url: new URL(formData.url),
+              description: formData.description,
+              upvotes: 0,
             },
-            timeCreated: new Date().getTime(),
-            title: formData.title,
-            url: formData.url,
-            description: formData.description,
-            upvotes: 0,
+          }),
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
           },
         });
         setFormData({
@@ -104,3 +110,6 @@ const Submit = () => {
 };
 
 export default Submit;
+
+// TODO - VALIDATE URL
+// TODO - USE SHORT-UUID

@@ -1,11 +1,13 @@
 import React from 'react';
-import * as utils from './utils';
+import Link from 'next/link';
+import * as utils from '../../utils/utils';
 import * as Styled from './styles';
 
 interface PostProps {
   num: number;
   title: string;
-  url: string;
+  url: URL;
+  postId: string;
   userPosted: string;
   timeCreated: number;
   numberOfComments: number;
@@ -15,6 +17,7 @@ const Post = ({
   num,
   title,
   url,
+  postId,
   userPosted,
   timeCreated,
   numberOfComments, // todo
@@ -38,9 +41,9 @@ const Post = ({
         </p>
         <p>unvote</p>
         <p>hide</p>
-        <p>
+        <Link href={`/post/${postId}`}>
           {numberOfComments > 0 ? `${numberOfComments} comments` : 'discuss'}
-        </p>
+        </Link>
       </Styled.PostStats>
     </Styled.PostWrapper>
   );

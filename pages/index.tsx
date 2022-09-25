@@ -11,19 +11,19 @@ interface PostProps {
     userName: string;
   };
   title: string;
-  url: string;
+  url: URL;
   description: string;
   upvotes: number;
   timeCreated: number;
 }
 
 const Home: NextPage = () => {
-  const [posts, setPosts] = useState<any>([]);
+  const [posts, setPosts] = useState<PostProps[]>([]);
 
   useEffect(() => {
     const getAllPosts = async () => {
       try {
-        const response = await fetch('/api/allPosts'),
+        const response = await fetch('/api/getAllPosts'),
           getPosts = await response.json(),
           { posts } = getPosts.data;
         setPosts(posts);
@@ -50,6 +50,7 @@ const Home: NextPage = () => {
               num={posts.indexOf(post) + 1}
               title={post.title}
               url={post.url}
+              postId={post.postID}
               userPosted={post.author.userName}
               timeCreated={post.timeCreated}
               numberOfComments={10}

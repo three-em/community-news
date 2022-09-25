@@ -20,7 +20,7 @@ const useGetUser = () => {
       const getAllUsers = async () => {
         try {
           setLoading(true);
-          const fetchUsers = await fetch('/api/allPosts');
+          const fetchUsers = await fetch('/api/getAllPosts');
           if (fetchUsers.ok) {
             const res = await fetchUsers.json();
             const { users } = res.data;

@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { PermissionType } from 'arconnect';
 import React, { useState, useEffect } from 'react';
 import Router from 'next/router';
@@ -12,7 +11,7 @@ const Connect = () => {
   useEffect(() => {
     const getAllUsers = async () => {
       try {
-        const response = await fetch('/api/allPosts');
+        const response = await fetch('/api/getAllPosts');
         const getPosts = await response.json();
         const { users } = getPosts.data;
 
@@ -64,17 +63,25 @@ const Connect = () => {
     const postUser = async () => {
       try {
         const address = await window.arweaveWallet.getActiveAddress();
-        await axios.post('/api/connect', {
-          input: {
-            functionRole: 'addUser',
-            walletAddress: address,
-            userName: userName.toLowerCase(),
+        await fetch('/api/connect', {
+          method: 'POST',
+          body: JSON.stringify({
+            input: {
+              functionRole: 'addUser',
+              walletAddress: address,
+              userName: userName.toLowerCase(),
+            },
+          }),
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
           },
         });
       } catch (error) {
         console.error(error);
       }
     };
+
+    // todo - do not post new user if walletAddress already exists 🤦‍♂️
 
     if (!currentUser.userName && !currentUser.walletAddress) {
       await connectWallet();

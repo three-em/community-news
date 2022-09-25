@@ -6,23 +6,22 @@ import useGetUser from '../hooks/useGetUser';
 
 const Nav = () => {
   const arconnect = useArconnect(),
-    { currentUser } = useGetUser();
+    { currentUser } = useGetUser(),
+    navItems: Array<'new' | 'threads' | 'comments' | 'submit'> = [
+      'new',
+      'threads',
+      'comments',
+      'submit',
+    ];
 
   return (
     <>
       <ul>
-        <li>
-          <Link href='/new'>new</Link>
-        </li>
-        <li>
-          <Link href='/threads'>threads</Link>
-        </li>
-        <li>
-          <Link href='/comments'>comments</Link>
-        </li>
-        <li>
-          <Link href='/submit'>submit</Link>
-        </li>
+        {navItems.map((item: string, index) => (
+          <li key={index}>
+            <Link href={`/${item}`}>{item}</Link>
+          </li>
+        ))}
       </ul>
 
       <div>

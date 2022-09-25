@@ -21,13 +21,9 @@ const getPostDate = (time: number) => {
   return timeSincePost;
 };
 
-const getShortUrl = (url: string) => {
-  const shortUrl = url
-    .replace('https://www.', '')
-    .replace('https://', '')
-    .replace('http://', '')
-    .split(/[/?#]/)[0];
-  return shortUrl;
+const getShortUrl = (url: URL) => {
+  const { hostname } = new URL(url);
+  return hostname;
 };
 
 export { getPostDate, getShortUrl };
