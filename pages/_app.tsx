@@ -1,4 +1,3 @@
-// import '../styles/globals.css';
 import Nav from '../components/Nav';
 import type { AppProps } from 'next/app';
 import { createGlobalStyle } from 'styled-components';
