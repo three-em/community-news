@@ -2,17 +2,19 @@ import React from 'react';
 import useArconnect from 'use-arconnect';
 import Link from 'next/link';
 import Router from 'next/router';
-import useGetUser from '../hooks/useGetUser';
+import { useGetUser } from '../hooks/useGetUser';
+
+enum NavItemsProps {
+  NEW = 'new',
+  THREADS = 'threads',
+  COMMENTS = 'comments',
+  SUBMIT = 'submit',
+}
 
 const Nav = () => {
   const arconnect = useArconnect(),
     { currentUser } = useGetUser(),
-    navItems: Array<'new' | 'threads' | 'comments' | 'submit'> = [
-      'new',
-      'threads',
-      'comments',
-      'submit',
-    ];
+    navItems = Object.values(NavItemsProps);
 
   return (
     <>

@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import React, { useState } from 'react';
 import Router from 'next/router';
-import useGetUser from '../hooks/useGetUser';
+import { useGetUser } from '../hooks/useGetUser';
 import short from 'short-uuid';
 
 interface StateProps {

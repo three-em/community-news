@@ -1,10 +1,6 @@
 import { useEffect, useState } from 'react';
-import { PostProps } from '../types/index';
+import { PostProps, UserProps } from '../types/index';
 
-interface UserProps {
-  userName: string;
-  walletAddress: string;
-}
 
 export const useGetAllData = () => {
   const [posts, setPosts] = useState<PostProps[]>([]),

@@ -1,46 +1,35 @@
 import { useEffect, useState } from 'react';
 import useArConnect from 'use-arconnect';
-import useWalletAddress from './useWalletAddress';
+import { useGetAllData } from './useGetAllData';
+import { useWalletAddress } from './useWalletAddress';
+import { UserProps } from '../types';
 
-interface UserProps {
-  userName: string;
-  walletAddress: string;
-}
-
-const useGetUser = () => {
+export const useGetUser = () => {
   const [allUsers, setAllUsers] = useState<UserProps[]>([]),
     [loading, setLoading] = useState(false),
     address = useWalletAddress(),
-    arconnect = useArConnect();
+    arconnect = useArConnect(),
+    { users } = useGetAllData();
 
-  let currentUser: UserProps = { userName: '', walletAddress: '' };
+  const getAllUsers = async () => {
+    try {
+      setLoading(true);
+      setAllUsers(users);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     if (arconnect) {
-      const getAllUsers = async () => {
-        try {
-          setLoading(true);
-          const fetchUsers = await fetch('/api/getAllPosts');
-          if (fetchUsers.ok) {
-            const res = await fetchUsers.json();
-            const { users } = res.data;
-            setAllUsers(users);
-            setLoading(false);
-          }
-        } catch (error) {
-          console.error(error);
-        }
-      };
-
       getAllUsers();
     }
-  }, [arconnect]);
-
-  allUsers.map((user) => {
-    if (user.walletAddress === address) currentUser = user;
   });
+
+  const currentUser = allUsers.find(
+    (user) => user.walletAddress === address
+  ) || { userName: '', walletAddress: '' };
 
   return { currentUser, loading };
 };
-
-export default useGetUser;

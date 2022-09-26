@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const useWalletAddress = () => {
+export const useWalletAddress = () => {
   const [address, setAddress] = useState('');
 
   const getWalletAddress = async () => {
@@ -15,5 +15,3 @@ const useWalletAddress = () => {
   getWalletAddress();
   return address;
 };
-
-export default useWalletAddress;

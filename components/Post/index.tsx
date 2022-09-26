@@ -3,10 +3,10 @@ import Link from 'next/link';
 import * as utils from '../../utils/utils';
 import * as Styled from './styles';
 
-interface PostProps {
+interface PostComponentProps {
   num: number;
   title: string;
-  url: URL;
+  url: string;
   postId: string;
   userPosted: string;
   timeCreated: number;
@@ -21,7 +21,7 @@ const Post = ({
   userPosted,
   timeCreated,
   numberOfComments, // todo
-}: PostProps) => {
+}: PostComponentProps) => {
   const shortUrl = utils.getShortUrl(url);
   const timeSincePost = utils.getPostDate(timeCreated);
 

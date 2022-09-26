@@ -1,38 +1,13 @@
-import { useEffect, useState } from 'react';
 import type { NextPage } from 'next';
+import { PostProps } from '../types';
+import { useGetAllData } from '../hooks/useGetAllData';
 import Link from 'next/link';
 import Head from 'next/head';
 import Post from '../components/Post';
 import styles from '../styles/Home.module.css';
 
-interface PostProps {
-  postID: string;
-  author: {
-    userName: string;
-  };
-  title: string;
-  url: URL;
-  description: string;
-  upvotes: number;
-  timeCreated: number;
-}
-
 const Home: NextPage = () => {
-  const [posts, setPosts] = useState<PostProps[]>([]);
-
-  useEffect(() => {
-    const getAllPosts = async () => {
-      try {
-        const response = await fetch('/api/getAllPosts'),
-          getPosts = await response.json(),
-          { posts } = getPosts.data;
-        setPosts(posts);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    getAllPosts();
-  }, [posts]);
+  const { posts, loading } = useGetAllData();
 
   return (
     <div className={styles.container}>
@@ -56,6 +31,8 @@ const Home: NextPage = () => {
               numberOfComments={10}
             />
           ))
+        ) : loading ? (
+          <p> loading...</p>
         ) : (
           <>
             <p>No posts yet</p>
@@ -70,3 +47,4 @@ const Home: NextPage = () => {
 export default Home;
 
 // todo - add loading state since we're not using getStaticProps
+// todo - move user props to dedicated types folder

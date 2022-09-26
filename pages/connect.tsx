@@ -1,34 +1,30 @@
 import { PermissionType } from 'arconnect';
 import React, { useState, useEffect } from 'react';
 import Router from 'next/router';
-import useGetUser from '../hooks/useGetUser';
+import { useGetAllData } from '../hooks/useGetAllData';
+import { useGetUser } from '../hooks/useGetUser';
+import { UserProps } from '../types';
 
 const Connect = () => {
   const [userName, setUserName] = useState(''),
-    [allUserNames, setAllUserNames] = useState<string[]>([]),
-    { currentUser } = useGetUser();
+    [userNames, setUserNames] = useState<string[]>([]),
+    { currentUser } = useGetUser(),
+    { users } = useGetAllData();
 
   useEffect(() => {
-    const getAllUsers = async () => {
+    (async () => {
       try {
-        const response = await fetch('/api/getAllPosts');
-        const getPosts = await response.json();
-        const { users } = getPosts.data;
-
-        users.map((user: { walletAddress: string; userName: string }) => {
-          setAllUserNames(() => [...allUserNames, user.userName]);
-        });
+        const allUserNames = users.map((user: UserProps) => user.userName);
+        setUserNames(allUserNames);
       } catch (error) {
         console.error(error);
       }
-    };
-
-    getAllUsers();
-  });
+    })();
+  }, [users]);
 
   const validateUserNameFormat = () => /^[a-z0-9_]+$/i.test(userName);
   const validateUserNameLength = () => userName.length > 3;
-  const validateUsername = () => !userName || allUserNames.includes(userName);
+  const validateUsername = () => !userName || userNames.includes(userName);
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     setUserName(e.currentTarget.value);
@@ -93,7 +89,7 @@ const Connect = () => {
   return (
     <>
       <h1>Connect your ArConnect Wallet</h1>
-
+      {/* todo - refactor */}
       {userName.length === 0 ? null : validateUsername() ? (
         <p>username not available</p>
       ) : !validateUserNameFormat() ? (
@@ -102,8 +98,7 @@ const Connect = () => {
         <p>Username must have atleast 4 character</p>
       ) : (
         <p>username available</p>
-      )}
-
+      )}{' '}
       {currentUser.userName && currentUser.walletAddress ? (
         <h4>your Arconnect wallet is already connected to Community News</h4>
       ) : (
@@ -115,7 +110,7 @@ const Connect = () => {
               onChange={handleChange}
               style={{
                 border: `${
-                  allUserNames.includes(userName) ||
+                  userNames.includes(userName) ||
                   (userName.length > 0 && !validateUserNameLength())
                     ? '1.5px solid red'
                     : '1.5px solid gray'

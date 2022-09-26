@@ -21,7 +21,7 @@ const getPostDate = (time: number) => {
   return timeSincePost;
 };
 
-const getShortUrl = (url: URL) => {
+const getShortUrl = (url: string) => {
   const { hostname } = new URL(url);
   return hostname;
 };
