@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { PostProps } from '../../types';
+import { ThumbsupIcon } from '@primer/octicons-react';
 import { useGetAllData } from '../../hooks/useGetAllData';
 import { getShortUrl, getPostDate } from '../../utils/utils';
+import * as Styled from '../../styles/postView';
 
 const ViewPost = () => {
   const router = useRouter(),
@@ -23,27 +25,32 @@ const ViewPost = () => {
   return (
     <>
       {post ? (
-        <>
-          <div>
-            <p>upvote</p>
-            <p>{post.title}</p>
-            <p>({getShortUrl(post.url)})</p>
-          </div>
-          <p>
-            posted by {post.author.userName} {getPostDate(post.timeCreated)} |
-            152 comments
-          </p>
+        <Styled.Wrapper>
+          <Styled.PostInfo>
+            <ThumbsupIcon size={12} />
+            <div>
+              <Styled.PostTitle>
+                {post.title} ({getShortUrl(post.url)})
+              </Styled.PostTitle>
+              <Styled.PostAuthor>
+                posted by {post.author.userName} {getPostDate(post.timeCreated)}{' '}
+                | 152 comments
+              </Styled.PostAuthor>
+            </div>
+          </Styled.PostInfo>
 
-          <textarea
-            name='comment'
-            id='comment'
-            cols={30}
-            rows={10}
-            placeholder='your thoughts'
-          ></textarea>
+          <>
+            <Styled.TextArea
+              name='comment'
+              id='comment'
+              cols={30}
+              rows={10}
+              placeholder='your thoughts'
+            ></Styled.TextArea>
 
-          <button>add comment</button>
-        </>
+            <Styled.Button>add comment</Styled.Button>
+          </>
+        </Styled.Wrapper>
       ) : (
         <p>loading...</p>
       )}

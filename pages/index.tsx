@@ -4,20 +4,20 @@ import { useGetAllData } from '../hooks/useGetAllData';
 import Link from 'next/link';
 import Head from 'next/head';
 import Post from '../components/Post';
-import styles from '../styles/Home.module.css';
+import * as Styled from '../styles/home';
 
 const Home: NextPage = () => {
   const { posts, loading } = useGetAllData();
 
   return (
-    <div className={styles.container}>
+    <Styled.Container>
       <Head>
         <title>Community News</title>
         <meta name='description' content='EXM Data Indexing Application' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
-      <main>
+      <Styled.Main>
         {posts.length > 0 ? (
           posts.map((post: PostProps) => (
             <Post
@@ -39,12 +39,9 @@ const Home: NextPage = () => {
             <Link href='/submit'>Submit Post</Link>
           </>
         )}
-      </main>
-    </div>
+      </Styled.Main>
+    </Styled.Container>
   );
 };
 
 export default Home;
-
-// todo - add loading state since we're not using getStaticProps
-// todo - move user props to dedicated types folder

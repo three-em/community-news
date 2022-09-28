@@ -1,6 +1,7 @@
 import Nav from '../components/Nav';
 import type { AppProps } from 'next/app';
 import { createGlobalStyle } from 'styled-components';
+import { CurrentUserProvider } from '../reducers/userContext';
 
 const GlobalStyles = createGlobalStyle`
   body {
@@ -14,8 +15,10 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <GlobalStyles />
-      <Nav />
-      <Component {...pageProps} />
+      <CurrentUserProvider>
+        <Nav />
+        <Component {...pageProps} />
+      </CurrentUserProvider>
     </>
   );
 }

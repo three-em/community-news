@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import * as utils from '../../utils/utils';
 import * as Styled from './styles';
+import { ThumbsupIcon } from '@primer/octicons-react';
 
 interface PostComponentProps {
   num: number;
@@ -29,18 +30,18 @@ const Post = ({
     <Styled.PostWrapper>
       <Styled.PostInfo>
         <p>{num}.</p>
-        <p>upvote</p>
-        <p>
-          {title} ({shortUrl})
-        </p>
+        <ThumbsupIcon size={12} />
       </Styled.PostInfo>
 
       <Styled.PostStats>
-        <p>
-          posted by {userPosted} {timeSincePost} ago
+        <p className='title'>
+          {title} ({shortUrl})
         </p>
-        <p>unvote</p>
-        <p>hide</p>
+        <p>
+          posted by {userPosted} {timeSincePost} ago | 
+        </p>
+        <p>unvote |</p>
+        <p>hide |</p>
         <Link href={`/post/${postId}`}>
           {numberOfComments > 0 ? `${numberOfComments} comments` : 'discuss'}
         </Link>

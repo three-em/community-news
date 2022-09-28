@@ -2,26 +2,45 @@ import styled from 'styled-components';
 
 const PostWrapper = styled.div`
   display: flex;
-  flex-direction: column;
+  padding: 0.5rem;
+  align-items: baseline;
 `;
 
 const PostInfo = styled.div`
-  display: flex;
   gap: 0.5rem;
+  display: flex;
   font-size: 14px;
-  margin-top: 0.4rem;
+  align-items: baseline;
 
   p {
     margin: 0;
+    font-size: 1rem;
   }
 `;
 
 const PostStats = styled.div`
+  gap: 0.4rem;
   display: flex;
   font-size: 13px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-left: 0.5rem;
+
+  .title {
+    font-weight: 500;
+    font-size: 15px;
+    color: #000;
+  }
 
   p {
-    margin: 0.3rem;
+    margin: 0;
+    color: gray;
+    font-size: 13px;
+  }
+
+  a {
+    text-decoration: none;
+    color: gray;
   }
 `;
 

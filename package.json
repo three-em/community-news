@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@execution-machine/sdk": "^0.1.35",
+    "@primer/octicons-react": "^17.5.0",
     "@types/styled-components": "^5.1.26",
     "@types/uuid": "^8.3.4",
     "arconnect": "^0.4.2",

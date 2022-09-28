@@ -1,7 +1,8 @@
 import { v4 as uuid } from 'uuid';
 import React, { useState } from 'react';
 import Router from 'next/router';
-import { useGetUser } from '../hooks/useGetUser';
+import { useGetAllData } from '../hooks/useGetAllData';
+import { useGetUser } from '../reducers/userContext';
 import short from 'short-uuid';
 
 interface StateProps {
@@ -17,7 +18,8 @@ const Submit = () => {
       description: '',
     },
     [formData, setFormData] = useState(initialState),
-    { currentUser } = useGetUser();
+    { users } = useGetAllData(),
+    { user: currentUser, dispatch } = useGetUser();
 
   const handleSubmit = async (event: React.SyntheticEvent) => {
     try {
@@ -61,6 +63,27 @@ const Submit = () => {
     setFormData({ ...formData, [e.currentTarget.name]: e.currentTarget.value });
   };
 
+  const handleConnect = async () => {
+    await window.arweaveWallet.connect(
+      ['ACCESS_ADDRESS', 'ACCESS_ALL_ADDRESSES', 'SIGN_TRANSACTION'],
+      {
+        name: 'CommunityLabs News',
+      }
+    );
+    const address = await window.arweaveWallet.getActiveAddress();
+
+    users.find((user) => {
+      if (user.walletAddress === address) {
+        const { userName, walletAddress } = user;
+        dispatch({
+          type: 'updateUser',
+          userName,
+          walletAddress,
+        });
+      }
+    });
+  };
+
   return (
     <main>
       <br />
@@ -102,7 +125,7 @@ const Submit = () => {
       ) : (
         <>
           <p>Connect wallet to submit post</p>
-          <button onClick={() => Router.push('/connect')}>Connect</button>
+          <button onClick={handleConnect}>Connect</button>
         </>
       )}
     </main>

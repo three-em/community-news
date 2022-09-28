@@ -1,14 +1,15 @@
-import { PermissionType } from 'arconnect';
-import React, { useState, useEffect } from 'react';
 import Router from 'next/router';
+import * as Styled from '../styles/connect';
+import React, { useState, useEffect } from 'react';
 import { useGetAllData } from '../hooks/useGetAllData';
-import { useGetUser } from '../hooks/useGetUser';
 import { UserProps } from '../types';
+import { useGetUser } from '../reducers/userContext';
 
 const Connect = () => {
-  const [userName, setUserName] = useState(''),
+  const [userExists, setUserExists] = useState(false),
+    [userName, setUserName] = useState(''),
     [userNames, setUserNames] = useState<string[]>([]),
-    { currentUser } = useGetUser(),
+    { user: currentUser, dispatch } = useGetUser(),
     { users } = useGetAllData();
 
   useEffect(() => {
@@ -16,45 +17,40 @@ const Connect = () => {
       try {
         const allUserNames = users.map((user: UserProps) => user.userName);
         setUserNames(allUserNames);
+        users.find((user) => {
+          if (user.walletAddress === currentUser.walletAddress) {
+            setUserExists(true);
+          }
+          setUserExists(false);
+        });
       } catch (error) {
         console.error(error);
       }
     })();
-  }, [users]);
+  }, [users, currentUser.walletAddress]);
 
-  const validateUserNameFormat = () => /^[a-z0-9_]+$/i.test(userName);
   const validateUserNameLength = () => userName.length > 3;
+  const validateUserNameFormat = () => /^[a-z0-9_]+$/i.test(userName);
   const validateUsername = () => !userName || userNames.includes(userName);
+
+  const formValidation = () => {
+    if (validateUsername()) {
+      return 'username not available';
+    } else if (!validateUserNameFormat()) {
+      return 'wrong format. use digits, numbers or underscore';
+    } else if (!validateUserNameLength()) {
+      return 'username must have atleast 4 characters';
+    } else {
+      return 'username available';
+    }
+  };
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     setUserName(e.currentTarget.value);
   };
 
-  const login = async () => {
-    try {
-      const arConnectPermissions: PermissionType[] = [
-        'ACCESS_ADDRESS',
-        'ACCESS_ALL_ADDRESSES',
-        'SIGN_TRANSACTION',
-      ];
-      await window.arweaveWallet.connect(arConnectPermissions, {
-        name: 'CommunityLabs News',
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-
-    const connectWallet = async () => {
-      try {
-        await login();
-      } catch (error) {
-        console.error(error);
-      }
-    };
 
     const postUser = async () => {
       try {
@@ -72,15 +68,13 @@ const Connect = () => {
             'Content-type': 'application/json; charset=UTF-8',
           },
         });
+        dispatch({ type: 'updateUser', userName, walletAddress: address });
       } catch (error) {
         console.error(error);
       }
     };
 
-    // todo - do not post new user if walletAddress already exists 🤦‍♂️
-
     if (!currentUser.userName && !currentUser.walletAddress) {
-      await connectWallet();
       await postUser();
       Router.push('/');
     }
@@ -88,19 +82,11 @@ const Connect = () => {
 
   return (
     <>
-      <h1>Connect your ArConnect Wallet</h1>
-      {/* todo - refactor */}
-      {userName.length === 0 ? null : validateUsername() ? (
-        <p>username not available</p>
-      ) : !validateUserNameFormat() ? (
-        <p>wrong format. use digits, numbers or underscore</p>
-      ) : !validateUserNameLength() ? (
-        <p>Username must have atleast 4 character</p>
-      ) : (
-        <p>username available</p>
-      )}{' '}
+      {userName.length === 0 ? null : <p>{formValidation()}</p>}
       {currentUser.userName && currentUser.walletAddress ? (
-        <h4>your Arconnect wallet is already connected to Community News</h4>
+        <Styled.ConnectHeader>
+          your arconnect wallet is already connected to community news
+        </Styled.ConnectHeader>
       ) : (
         <form action='' onSubmit={handleSubmit}>
           <label>
