@@ -72,16 +72,17 @@ const Submit = () => {
     );
     const address = await window.arweaveWallet.getActiveAddress();
 
-    users.find((user) => {
-      if (user.walletAddress === address) {
-        const { userName, walletAddress } = user;
-        dispatch({
-          type: 'updateUser',
-          userName,
-          walletAddress,
-        });
-      }
-    });
+    const findUser = users.find((user) => user.walletAddress === address);
+    if (findUser) {
+      const { userName, walletAddress } = findUser;
+      dispatch({
+        type: 'updateUser',
+        userName,
+        walletAddress,
+      });
+    } else {
+      Router.push('/connect');
+    }
   };
 
   return (

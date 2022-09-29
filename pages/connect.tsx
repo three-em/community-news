@@ -17,12 +17,10 @@ const Connect = () => {
       try {
         const allUserNames = users.map((user: UserProps) => user.userName);
         setUserNames(allUserNames);
-        users.find((user) => {
-          if (user.walletAddress === currentUser.walletAddress) {
-            setUserExists(true);
-          }
-          setUserExists(false);
-        });
+        const doesUserExist = users.some(
+          (user) => user.walletAddress === currentUser.walletAddress
+        );
+        setUserExists(doesUserExist);
       } catch (error) {
         console.error(error);
       }
@@ -114,3 +112,5 @@ const Connect = () => {
 };
 
 export default Connect;
+
+// todo - user exists - connect and redirect
