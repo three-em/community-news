@@ -1,24 +1,45 @@
 import React from 'react';
 import Link from 'next/link';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import useArconnect from 'use-arconnect';
-import { useGetUser } from '../reducers/userContext';
+import { useGettUser } from '../hooks/useGettUser';
 import { useGetAllData } from '../hooks/useGetAllData';
 import styled from 'styled-components';
 import { PermissionType } from 'arconnect';
 
 enum NavItemsProps {
   NEW = 'new',
-  THREADS = 'threads',
+  PAST = 'past',
   COMMENTS = 'comments',
+  ASK = 'ask',
   SUBMIT = 'submit',
 }
 
 const NavWrapper = styled.nav`
-  background: #662eff;
+  background-color: #662eff;
   display: flex;
-  padding: 0.7rem;
+  padding: 0.5rem;
   justify-content: space-between;
+
+  @media (min-width: 1100px) {
+    width: 80%;
+    margin: auto;
+    margin-top: 1rem;
+  }
+`;
+
+const SubmitNav = styled.div`
+  display: flex;
+  gap: 1rem;
+
+  .cnews {
+    cursor: pointer;
+  }
+
+  p {
+    font-weight: 800;
+    margin: 0;
+  }
 `;
 
 const NavItems = styled.div`
@@ -41,32 +62,53 @@ const NavItems = styled.div`
     li {
       a {
         color: #000;
-        font-size: 15px;
+        font-size: 13px;
         text-decoration: none;
       }
     }
   }
+
+  @media (min-width: 760px) {
+    margin: 0;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
 `;
 
 const NavConnect = styled.div`
-  p {
-    margin: 0;
-    font-size: 15px;
-    font-weight: 550;
-    margin-bottom: 1rem;
+  a {
+    font-size: 14px;
   }
 
-  button {
-    padding: 0.35rem;
-    border-radius: 1px;
+  @media (min-width: 760px) {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    a {
+      margin-left: 0.5rem;
+      cursor: pointer;
+    }
   }
 `;
 
+const NavUsername = styled.a`
+  margin: 0;
+  color: #000;
+  font-size: 15px;
+  font-weight: 550;
+  cursor: pointer;
+  text-decoration: none;
+`;
+
 const Nav = () => {
-  const arconnect = useArconnect(),
-    { user: currentUser, dispatch } = useGetUser(),
-    { users } = useGetAllData(),
-    navItems = Object.values(NavItemsProps);
+  const router = useRouter();
+  const arconnect = useArconnect();
+  const { users } = useGetAllData();
+  const { currentUser } = useGettUser();
+  const navItems = Object.values(NavItemsProps);
 
   const handleConnect = async () => {
     await window.arweaveWallet.connect(
@@ -80,11 +122,8 @@ const Nav = () => {
 
     if (user) {
       const { userName, walletAddress } = user;
-      dispatch({
-        type: 'updateUser',
-        userName,
-        walletAddress,
-      });
+      localStorage.setItem('user', JSON.stringify({ userName, walletAddress }));
+      location.reload();
     } else {
       Router.push('/connect');
     }
@@ -92,42 +131,59 @@ const Nav = () => {
 
   const signOut = async () => {
     await window.arweaveWallet.disconnect();
-    dispatch({
-      type: 'updateUser',
-      userName: '',
-      walletAddress: '',
-    });
+    localStorage.setItem(
+      'user',
+      JSON.stringify({ userName: '', walletAddress: '' })
+    );
+    location.reload();
+    Router.push('/');
   };
 
   return (
     <NavWrapper>
-      <NavItems>
-        <Link href='/'>Community News</Link>
-        <ul>
-          {navItems.map((item: string, index) => (
-            <>
-              <li key={index}>
-                <Link href={`/${item}`}>{item}</Link>
-              </li>
-              <span>|</span>
-            </>
-          ))}
-        </ul>
-      </NavItems>
+      {router.pathname === '/submit' ? (
+        <SubmitNav>
+          <p onClick={() => Router.push('/')} className='cnews'>
+            Community News /
+          </p>
+          <p>Submit</p>
+        </SubmitNav>
+      ) : (
+        <>
+          <NavItems>
+            <Link href='/'>Community News</Link>
+            <ul>
+              {navItems.map((item: string, index) => (
+                <>
+                  <li key={index}>
+                    <Link href={`/${item}`}>{item}</Link>
+                  </li>
+                  <span>|</span>
+                </>
+              ))}
+            </ul>
+          </NavItems>
+          <NavConnect>
+            {currentUser.userName && currentUser.walletAddress ? (
+              <>
+                <NavUsername href={`/user/${currentUser.userName}`}>
+                  {currentUser.userName}
+                </NavUsername>
+              </>
+            ) : null}
 
-      <NavConnect>
-        {currentUser.userName ? <p>{currentUser.userName}</p> : null}
-
-        {arconnect === undefined ? (
-          <button onClick={() => window.open('https://arconnect.io')}>
-            install arConnect
-          </button>
-        ) : currentUser.userName && currentUser.walletAddress ? (
-          <button onClick={signOut}>disconnect</button>
-        ) : (
-          <button onClick={handleConnect}>connect</button>
-        )}
-      </NavConnect>
+            {arconnect === undefined ? (
+              <a onClick={() => window.open('https://arconnect.io')}>
+                install arConnect
+              </a>
+            ) : currentUser.userName && currentUser.walletAddress ? (
+              <a onClick={signOut}>| signout</a>
+            ) : (
+              <a onClick={handleConnect}>connect</a>
+            )}
+          </NavConnect>
+        </>
+      )}
     </NavWrapper>
   );
 };
