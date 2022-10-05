@@ -349,10 +349,10 @@
     minimatch "^3.1.2"
     strip-json-comments "^3.1.1"
 
-"@execution-machine/sdk@^0.1.35":
-  version "0.1.35"
-  resolved "https://registry.yarnpkg.com/@execution-machine/sdk/-/sdk-0.1.35.tgz#e3114fb13a330d8f60e3c0e9eefa9c309a9b101c"
-  integrity sha512-taYUtSRDA9sZIH2gcDk4qtj1qJnCgTpIfDa4TBR6i2lJ8XV06gEMA+BGrJ7TVr8cyk/l74h4y9BG7Fl2JyI2Zg==
+"@execution-machine/sdk@^0.1.42":
+  version "0.1.42"
+  resolved "https://registry.yarnpkg.com/@execution-machine/sdk/-/sdk-0.1.42.tgz#705f1b76d3cef15628a63d45f103445674ce716d"
+  integrity sha512-HyLs+MmN93fm/ek1FUHTxebTq/xc8vGzeCu+M88xMTKuutBa0qRkV4eUQYNsbkZZZae+xQ9QyHG5X0w7VeV9dA==
   dependencies:
     "@types/node" "^18.0.0"
     arweave "^1.11.4"
@@ -364,6 +364,7 @@
     three-em-0-3-09 "npm:@three-em/node@^0.3.09"
     three-em-0-3-12 "npm:@three-em/node@^0.3.12"
     three-em-0-3-13 "npm:@three-em/node@^0.3.13"
+    three-em-0-3-14 "npm:@three-em/node@^0.3.14"
 
 "@humanwhocodes/config-array@^0.10.4":
   version "0.10.4"
@@ -776,6 +777,11 @@
   version "0.3.10"
   resolved "https://registry.yarnpkg.com/@three-em/node-darwin-arm64/-/node-darwin-arm64-0.3.10.tgz#2dfef9e3c604fcfba915b6367f5762e484b63678"
   integrity sha512-J4ec0zvi7ycovsA7r3cm7WbUYGv/imaUkwfbQPNorKPRk5moJAr3b9zvje4VMfDswOuP2fzsutr7AqU19hfc7w==
+
+"@three-em/node-darwin-arm64@0.3.14":
+  version "0.3.14"
+  resolved "https://registry.yarnpkg.com/@three-em/node-darwin-arm64/-/node-darwin-arm64-0.3.14.tgz#60e155de95be88e52588f83d4cb36ee288a67e4d"
+  integrity sha512-YZuqCG3P0Yyyjv72MlgfNShb0Rh4nf3aD2GhuEuptqd/nmWbCdBk44+doZStrDJ781+5PNifO1hWkFgg0arf1g==
 
 "@types/babel__core@^7.1.14":
   version "7.1.19"
@@ -4393,6 +4399,16 @@ text-table@^0.2.0:
     jest "^28.1.0"
   optionalDependencies:
     "@three-em/node-darwin-arm64" "0.3.10"
+
+"three-em-0-3-14@npm:@three-em/node@^0.3.14":
+  version "0.3.14"
+  resolved "https://registry.yarnpkg.com/@three-em/node/-/node-0.3.14.tgz#0bae2fd3e3130ff3acd5e55460777e6f14b229b7"
+  integrity sha512-A1X49GelshgrHzzuO/vP65se4QnUkhnGOBdtGYDq+oY9lxYxy3KbNIz3iKDPrTOsDrETTY/eq0RRubBf7rug4w==
+  dependencies:
+    detect-libc "^1.0.3"
+    jest "^28.1.0"
+  optionalDependencies:
+    "@three-em/node-darwin-arm64" "0.3.14"
 
 time-stamp@^1.0.1:
   version "1.1.0"
