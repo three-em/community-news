@@ -14,7 +14,7 @@ const PostInfo = styled.div`
 
   p {
     margin: 0;
-    font-size: 1rem;
+    font-size: 15px;
   }
 `;
 
@@ -28,19 +28,34 @@ const PostStats = styled.div`
 
   .title {
     font-weight: 500;
-    font-size: 15px;
+    font-size: 14px;
     color: #000;
+  }
+
+  .authorInfo {
+    display: flex;
+    flex-wrap: wrap;
+
+    p {
+      margin-right: 0.3rem;
+    }
   }
 
   p {
     margin: 0;
     color: gray;
-    font-size: 13px;
+    font-size: 12px;
   }
 
   a {
-    text-decoration: none;
+    text-decoration: underline;
     color: gray;
+  }
+
+  @media (min-width: 550px) {
+    width: 100%;
+    align-items: flex-start;
+    flex-direction: column;
   }
 `;
 
