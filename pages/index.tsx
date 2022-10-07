@@ -17,18 +17,19 @@ const Home: NextPage = () => {
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
-      <Styled.Main>
+      <main>
         {posts.length > 0 ? (
           posts.map((post: PostProps) => (
             <Post
-              key='1'
+              key={post.postID}
               num={posts.indexOf(post) + 1}
               title={post.title}
               url={post.url}
               postId={post.postID}
+              upvotes={post.upvotes}
               userPosted={post.author.userName}
               timeCreated={post.timeCreated}
-              numberOfComments={10}
+              numberOfComments={0}
             />
           ))
         ) : loading ? (
@@ -39,7 +40,7 @@ const Home: NextPage = () => {
             <Link href='/submit'>Submit Post</Link>
           </>
         )}
-      </Styled.Main>
+      </main>
     </Styled.Container>
   );
 };

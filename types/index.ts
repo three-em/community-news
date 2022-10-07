@@ -13,4 +13,7 @@ export interface PostProps {
 export interface UserProps {
   userName: string;
   walletAddress: string;
+  upvotedPosts: string[];
+  favorites: string[];
+  bio: string;
 }

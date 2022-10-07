@@ -48,7 +48,7 @@ const ViewPost = () => {
               placeholder='your thoughts'
             ></Styled.TextArea>
 
-            <Styled.Button>add comment</Styled.Button>
+            <Styled.SubmitButton>add comment</Styled.SubmitButton>
           </>
         </Styled.Wrapper>
       ) : (
@@ -59,5 +59,3 @@ const ViewPost = () => {
 };
 
 export default ViewPost;
-
-//todo - comments and replies

@@ -3,13 +3,13 @@ import * as Styled from '../styles/connect';
 import React, { useState, useEffect } from 'react';
 import { useGetAllData } from '../hooks/useGetAllData';
 import { UserProps } from '../types';
-import { useGetUser } from '../reducers/userContext';
+import { useGettUser } from '../hooks/useGettUser';
 
 const Connect = () => {
   const [userExists, setUserExists] = useState(false),
     [userName, setUserName] = useState(''),
     [userNames, setUserNames] = useState<string[]>([]),
-    { user: currentUser, dispatch } = useGetUser(),
+    { currentUser } = useGettUser(),
     { users } = useGetAllData();
 
   useEffect(() => {
@@ -60,13 +60,19 @@ const Connect = () => {
               functionRole: 'addUser',
               walletAddress: address,
               userName: userName.toLowerCase(),
+              upvotedPosts: [],
+              favorites: [],
+              bio: '',
             },
           }),
           headers: {
             'Content-type': 'application/json; charset=UTF-8',
           },
         });
-        dispatch({ type: 'updateUser', userName, walletAddress: address });
+        localStorage.setItem(
+          'user',
+          JSON.stringify({ userName, walletAddress: address })
+        );
       } catch (error) {
         console.error(error);
       }
@@ -112,5 +118,3 @@ const Connect = () => {
 };
 
 export default Connect;
-
-// todo - user exists - connect and redirect

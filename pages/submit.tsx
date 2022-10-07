@@ -1,10 +1,9 @@
+import Router from 'next/router';
 import { v4 as uuid } from 'uuid';
 import React, { useState } from 'react';
-import Router from 'next/router';
 import { useGetAllData } from '../hooks/useGetAllData';
-import { useGetUser } from '../reducers/userContext';
-import short from 'short-uuid';
-
+import { useGettUser } from '../hooks/useGettUser';
+import * as Styled from '../styles/submit';
 interface StateProps {
   title: string;
   url: string;
@@ -13,19 +12,19 @@ interface StateProps {
 
 const Submit = () => {
   const initialState: StateProps = {
-      title: '',
-      url: '',
-      description: '',
-    },
-    [formData, setFormData] = useState(initialState),
-    { users } = useGetAllData(),
-    { user: currentUser, dispatch } = useGetUser();
+    title: '',
+    url: '',
+    description: '',
+  };
+  const { users } = useGetAllData();
+  const [formData, setFormData] = useState(initialState);
+  const { currentUser } = useGettUser();
+  const { userName, walletAddress } = useGettUser().currentUser;
 
   const handleSubmit = async (event: React.SyntheticEvent) => {
     try {
       event?.preventDefault();
-      if (currentUser.userName && currentUser.walletAddress) {
-        const { userName } = currentUser;
+      if (userName && walletAddress) {
         await fetch('/api/addPost', {
           method: 'POST',
           body: JSON.stringify({
@@ -71,57 +70,62 @@ const Submit = () => {
       }
     );
     const address = await window.arweaveWallet.getActiveAddress();
-
     const findUser = users.find((user) => user.walletAddress === address);
+
     if (findUser) {
       const { userName, walletAddress } = findUser;
-      dispatch({
-        type: 'updateUser',
-        userName,
-        walletAddress,
-      });
+      localStorage.setItem('user', JSON.stringify({ userName, walletAddress }));
+      location.reload();
     } else {
       Router.push('/connect');
     }
   };
 
   return (
-    <main>
+    <Styled.Container>
       <br />
-
       {currentUser.userName && currentUser.walletAddress ? (
         <form action='' onSubmit={handleSubmit}>
-          <label htmlFor='title'>title</label>
-          <input
-            type='text'
-            name='title'
-            onChange={handleChange}
-            value={formData.title}
-          />
-          <br />
-          <label htmlFor='url'>url</label>
-          <input
-            type='text'
-            name='url'
-            value={formData.url}
-            onChange={handleChange}
-          />
-          <br />
-          <label htmlFor='description'>description</label>
-          <textarea
-            name='description'
-            cols={35}
-            rows={8}
-            value={formData.description}
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-              setFormData({
-                ...formData,
-                description: e.target.value,
-              });
-            }}
-          />
-          <br />
-          <button>Sumbit</button>
+          <Styled.FormItem>
+            <label htmlFor='title'>title</label>
+            <input
+              type='text'
+              name='title'
+              onChange={handleChange}
+              value={formData.title}
+            />
+          </Styled.FormItem>
+
+          <Styled.FormItem>
+            <label htmlFor='url'>link</label>
+            <input
+              type='text'
+              name='url'
+              value={formData.url}
+              onChange={handleChange}
+            />
+          </Styled.FormItem>
+
+          <Styled.FormItem>
+            <label htmlFor='description'>text</label>
+            <textarea
+              name='description'
+              value={formData.description}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                setFormData({
+                  ...formData,
+                  description: e.target.value,
+                });
+              }}
+            />
+          </Styled.FormItem>
+          <Styled.SubmitButton>Sumbit</Styled.SubmitButton>
+
+          <p>
+            Leave url blank to submit a question for discussion. If there is no
+            url, text will appear at the top of the thread. If there is a url,
+            text is optional.
+          </p>
         </form>
       ) : (
         <>
@@ -129,11 +133,8 @@ const Submit = () => {
           <button onClick={handleConnect}>Connect</button>
         </>
       )}
-    </main>
+    </Styled.Container>
   );
 };
 
 export default Submit;
-
-// TODO - VALIDATE URL
-// TODO - USE SHORT-UUID
