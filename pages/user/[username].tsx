@@ -3,10 +3,10 @@ import { useRouter } from 'next/router';
 import { useGettUser } from '../../hooks/useGettUser';
 
 const UserProfile = () => {
-  const router = useRouter();
-  const { username: reqUser } = router.query;
-  const [bio, setBio] = useState('');
-  const { userName, bio: currentBio } = useGettUser().currentUser;
+  const router = useRouter(),
+    { username: reqUser } = router.query,
+    [bio, setBio] = useState(''),
+    { userName, bio: currentBio } = useGettUser().currentUser;
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setBio(e.target.value);

@@ -12,14 +12,14 @@ interface StateProps {
 
 const Submit = () => {
   const initialState: StateProps = {
-    title: '',
-    url: '',
-    description: '',
-  };
-  const { users } = useGetAllData();
-  const [formData, setFormData] = useState(initialState);
-  const { currentUser } = useGettUser();
-  const { userName, walletAddress } = useGettUser().currentUser;
+      title: '',
+      url: '',
+      description: '',
+    },
+    { users } = useGetAllData(),
+    [formData, setFormData] = useState(initialState),
+    { currentUser } = useGettUser(),
+    { userName, walletAddress } = useGettUser().currentUser;
 
   const handleSubmit = async (event: React.SyntheticEvent) => {
     try {

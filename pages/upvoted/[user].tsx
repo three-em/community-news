@@ -5,9 +5,9 @@ import { useGettUser } from '../../hooks/useGettUser';
 import { useGetAllData } from '../../hooks/useGetAllData';
 
 const UpvotedPosts = () => {
-  const { user: queryingUser } = useRouter().query;
-  const { users, posts } = useGetAllData();
-  const { userName } = useGettUser().currentUser;
+  const { user: queryingUser } = useRouter().query,
+    { users, posts } = useGetAllData(),
+    { userName } = useGettUser().currentUser;
 
   const userUpvotes = users.find(
     (user) => user.userName === userName

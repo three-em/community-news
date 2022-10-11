@@ -4,12 +4,9 @@ import { useGettUser } from '../../hooks/useGettUser';
 import { useGetAllData } from '../../hooks/useGetAllData';
 
 const Favorites = () => {
-  const { loading, posts } = useGetAllData();
-  const { favorites, userName } = useGettUser().currentUser;
-
-  const userFavorites = posts.filter((post) =>
-    favorites?.includes(post.postID)
-  );
+  const { loading, posts } = useGetAllData(),
+    { favorites, userName } = useGettUser().currentUser,
+    userFavorites = posts.filter((post) => favorites?.includes(post.postID));
 
   return (
     <main>

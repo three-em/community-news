@@ -104,11 +104,11 @@ const NavUsername = styled.a`
 `;
 
 const Nav = () => {
-  const router = useRouter();
-  const arconnect = useArconnect();
-  const { users } = useGetAllData();
-  const { currentUser } = useGettUser();
-  const navItems = Object.values(NavItemsProps);
+  const router = useRouter(),
+    arconnect = useArconnect(),
+    { users } = useGetAllData(),
+    { currentUser } = useGettUser(),
+    navItems = Object.values(NavItemsProps);
 
   const handleConnect = async () => {
     await window.arweaveWallet.connect(
