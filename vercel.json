@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/**/*.ts": {
+    "api/*.ts": {
       "excludeFiles": "node_modules/three-em-0-3-14/**/*.node"
     }
   }
