@@ -14,7 +14,7 @@ const UserProfile = () => {
 
   const submitBioUpdate = async () => {
     try {
-      await fetch('/api/write', {
+      await fetch('/api/write-exm', {
         method: 'POST',
         body: JSON.stringify({
           functionRole: 'updateBio',

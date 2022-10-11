@@ -53,7 +53,7 @@ const Connect = () => {
     const postUser = async () => {
       try {
         const address = await window.arweaveWallet.getActiveAddress();
-        await fetch('/api/connect', {
+        await fetch('/api/write-exm', {
           method: 'POST',
           body: JSON.stringify({
             input: {

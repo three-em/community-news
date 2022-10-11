@@ -25,7 +25,7 @@ const Submit = () => {
     try {
       event?.preventDefault();
       if (userName && walletAddress) {
-        await fetch('/api/addPost', {
+        await fetch('/api/write-exm', {
           method: 'POST',
           body: JSON.stringify({
             input: {

@@ -10,7 +10,7 @@ export const useGetAllData = () => {
     (async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/getAllPosts'),
+        const response = await fetch('/api/readexm'),
           allPosts = await response.json(),
           { posts, users } = allPosts.data;
         setPosts(posts);

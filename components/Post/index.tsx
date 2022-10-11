@@ -46,7 +46,7 @@ const Post = ({
   }, [postId, users, userName]);
 
   const handlevote = async (action: 'upVote' | 'downVote') => {
-    await fetch('/api/upvote', {
+    await fetch('/api/write-exm', {
       method: 'POST',
       body: JSON.stringify({
         input: {
