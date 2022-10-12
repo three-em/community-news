@@ -1,16 +1,25 @@
 import Router from 'next/router';
 import * as Styled from '../styles/connect';
 import React, { useState, useEffect } from 'react';
-import { useGetAllData } from '../hooks/useGetAllData';
 import { UserProps } from '../types';
 import { useGettUser } from '../hooks/useGettUser';
+import { fetchData } from '../utils/getData';
 
-const Connect = () => {
+export async function getServerSideProps() {
+  const { users } = await fetchData();
+
+  return {
+    props: {
+      users,
+    },
+  };
+}
+
+const Connect = ({ users }: { users: UserProps[] }) => {
   const [userExists, setUserExists] = useState(false),
     [userName, setUserName] = useState(''),
     [userNames, setUserNames] = useState<string[]>([]),
-    { currentUser } = useGettUser(),
-    { users } = useGetAllData();
+    { currentUser } = useGettUser();
 
   useEffect(() => {
     (async () => {

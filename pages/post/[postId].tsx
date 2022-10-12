@@ -2,15 +2,24 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { PostProps } from '../../types';
 import { ThumbsupIcon } from '@primer/octicons-react';
-import { useGetAllData } from '../../hooks/useGetAllData';
 import { getShortUrl, getPostDate } from '../../utils/utils';
 import * as Styled from '../../styles/postView';
+import { fetchData } from '../../utils/getData';
 
-const ViewPost = () => {
+export async function getServerSideProps() {
+  const { posts } = await fetchData();
+
+  return {
+    props: {
+      posts,
+    },
+  };
+}
+
+const ViewPost = ({ posts }: { posts: PostProps[] }) => {
   const router = useRouter(),
     { postId } = router.query,
-    [post, setPost] = useState<PostProps>(),
-    { posts } = useGetAllData();
+    [post, setPost] = useState<PostProps>();
 
   useEffect(() => {
     (async () => {

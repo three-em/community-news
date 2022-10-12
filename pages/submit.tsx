@@ -1,22 +1,32 @@
 import Router from 'next/router';
 import { v4 as uuid } from 'uuid';
 import React, { useState } from 'react';
-import { useGetAllData } from '../hooks/useGetAllData';
 import { useGettUser } from '../hooks/useGettUser';
 import * as Styled from '../styles/submit';
+import { UserProps } from '../types';
+import { fetchData } from '../utils/getData';
 interface StateProps {
   title: string;
   url: string;
   description: string;
 }
 
-const Submit = () => {
+export async function getServerSideProps() {
+  const { users } = await fetchData();
+
+  return {
+    props: {
+      users,
+    },
+  };
+}
+
+const Submit = ({ users }: { users: UserProps[] }) => {
   const initialState: StateProps = {
       title: '',
       url: '',
       description: '',
     },
-    { users } = useGetAllData(),
     [formData, setFormData] = useState(initialState),
     { currentUser } = useGettUser(),
     { userName, walletAddress } = useGettUser().currentUser;
@@ -39,6 +49,7 @@ const Submit = () => {
               url: new URL(formData.url),
               description: formData.description,
               upvotes: 0,
+              comments: [],
             },
           }),
           headers: {

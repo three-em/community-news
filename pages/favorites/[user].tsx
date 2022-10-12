@@ -1,18 +1,26 @@
 import React from 'react';
 import Post from '../../components/Post';
 import { useGettUser } from '../../hooks/useGettUser';
-import { useGetAllData } from '../../hooks/useGetAllData';
+import { PostProps } from '../../types';
+import { fetchData } from '../../utils/getData';
 
-const Favorites = () => {
-  const { loading, posts } = useGetAllData(),
-    { favorites, userName } = useGettUser().currentUser,
+export async function getServerSideProps() {
+  const { posts } = await fetchData();
+
+  return {
+    props: {
+      posts,
+    },
+  };
+}
+
+const Favorites = ({ posts }: { posts: PostProps[] }) => {
+  const { favorites, userName } = useGettUser().currentUser,
     userFavorites = posts.filter((post) => favorites?.includes(post.postID));
 
   return (
     <main>
-      {loading ? (
-        <p>loading</p>
-      ) : favorites?.length > 0 ? (
+      {favorites?.length > 0 ? (
         <>
           {userFavorites.map((post) => (
             <Post

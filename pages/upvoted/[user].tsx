@@ -2,11 +2,28 @@ import React from 'react';
 import Post from '../../components/Post';
 import { useRouter } from 'next/router';
 import { useGettUser } from '../../hooks/useGettUser';
-import { useGetAllData } from '../../hooks/useGetAllData';
+import { PostProps, UserProps } from '../../types';
+import { fetchData } from '../../utils/getData';
 
-const UpvotedPosts = () => {
+export async function getServerSideProps() {
+  const { posts, users } = await fetchData();
+
+  return {
+    props: {
+      posts,
+      users,
+    },
+  };
+}
+
+const UpvotedPosts = ({
+  posts,
+  users,
+}: {
+  posts: PostProps[];
+  users: UserProps[];
+}) => {
   const { user: queryingUser } = useRouter().query,
-    { users, posts } = useGetAllData(),
     { userName } = useGettUser().currentUser;
 
   const userUpvotes = users.find(

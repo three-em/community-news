@@ -1,11 +1,21 @@
 import React from 'react';
 import Post from '../../components/Post';
 import { useRouter } from 'next/router';
-import { useGetAllData } from '../../hooks/useGetAllData';
+import { PostProps } from '../../types';
+import { fetchData } from '../../utils/getData';
 
-const Submissions = () => {
+export async function getServerSideProps() {
+  const { posts } = await fetchData();
+
+  return {
+    props: {
+      posts,
+    },
+  };
+}
+
+const Submissions = ({ posts }: { posts: PostProps[] }) => {
   const router = useRouter(),
-    { posts } = useGetAllData(),
     { username } = router.query,
     submittedPosts = posts.filter((post) => post.author.userName === username);
 

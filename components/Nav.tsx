@@ -1,11 +1,22 @@
 import React from 'react';
 import Link from 'next/link';
-import Router, { useRouter } from 'next/router';
 import useArconnect from 'use-arconnect';
+import Router, { useRouter } from 'next/router';
 import { useGettUser } from '../hooks/useGettUser';
-import { useGetAllData } from '../hooks/useGetAllData';
-import styled from 'styled-components';
 import { PermissionType } from 'arconnect';
+import { UserProps } from '../types';
+import { fetchData } from '../utils/getData';
+import styled from 'styled-components';
+
+export async function getServerSideProps() {
+  const { users } = await fetchData();
+
+  return {
+    props: {
+      users,
+    },
+  };
+}
 
 enum NavItemsProps {
   NEW = 'new',
@@ -103,10 +114,9 @@ const NavUsername = styled.a`
   text-decoration: none;
 `;
 
-const Nav = () => {
+const Nav = ({ users }: { users: UserProps[] }) => {
   const router = useRouter(),
     arconnect = useArconnect(),
-    { users } = useGetAllData(),
     { currentUser } = useGettUser(),
     navItems = Object.values(NavItemsProps);
 

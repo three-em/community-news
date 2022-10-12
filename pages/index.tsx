@@ -1,14 +1,21 @@
-import type { NextPage } from 'next';
-import { PostProps } from '../types';
-import { useGetAllData } from '../hooks/useGetAllData';
 import Link from 'next/link';
 import Head from 'next/head';
 import Post from '../components/Post';
+import { PostProps } from '../types';
+import { fetchData } from '../utils/getData';
 import * as Styled from '../styles/home';
 
-const Home: NextPage = () => {
-  const { posts, loading } = useGetAllData();
+export async function getServerSideProps() {
+  const { posts } = await fetchData();
 
+  return {
+    props: {
+      posts,
+    },
+  };
+}
+
+const Home = ({ posts }: { posts: PostProps[] }) => {
   return (
     <Styled.Container>
       <Head>
@@ -32,8 +39,6 @@ const Home: NextPage = () => {
               numberOfComments={0}
             />
           ))
-        ) : loading ? (
-          <p> loading...</p>
         ) : (
           <>
             <p>No posts yet</p>

@@ -1,12 +1,14 @@
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import { UserProps } from '../../types';
+import { useEffect, useState } from 'react';
+import { fetchData } from '../../utils/getData';
 import { useGettUser } from '../../hooks/useGettUser';
 import { ThumbsupIcon, NorthStarIcon } from '@primer/octicons-react';
-import { useGetAllData } from '../../hooks/useGetAllData';
-import * as utils from '../../utils/utils';
 import * as Styled from './styles';
+import * as utils from '../../utils/utils';
 
 interface PostComponentProps {
+  users?: UserProps[];
   num: number;
   title: string;
   url: string;
@@ -17,7 +19,18 @@ interface PostComponentProps {
   numberOfComments: number;
 }
 
+export async function getServerSideProps() {
+  const { users } = await fetchData();
+
+  return {
+    props: {
+      users,
+    },
+  };
+}
+
 const Post = ({
+  users,
   num,
   title,
   url,
@@ -30,19 +43,20 @@ const Post = ({
   const [showThumbsup, setShowThumbsup] = useState(false),
     shortUrl = utils.getShortUrl(url),
     timeSincePost = utils.getPostDate(timeCreated),
-    { userName } = useGettUser().currentUser,
-    { users } = useGetAllData();
+    { userName } = useGettUser().currentUser;
 
   useEffect(() => {
-    const userUpvotes = users
-      .map((user) => {
-        if (user.userName === userName) {
-          return user.upvotedPosts;
-        }
-      })
-      .flat();
-    const doesUpvoteExist = userUpvotes.some((upvote) => upvote === postId);
-    setShowThumbsup(doesUpvoteExist);
+    if (users) {
+      const userUpvotes = users
+        .map((user) => {
+          if (user.userName === userName) {
+            return user.upvotedPosts;
+          }
+        })
+        .flat();
+      const doesUpvoteExist = userUpvotes.some((upvote) => upvote === postId);
+      setShowThumbsup(doesUpvoteExist);
+    }
   }, [postId, users, userName]);
 
   const handlevote = async (action: 'upVote' | 'downVote') => {
