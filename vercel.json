@@ -1,7 +1,12 @@
 {
   "functions": {
     "pages/api/*.ts": {
-      "excludeFiles": "node_modules/three-em-0-3-14/**/*.node"
+      "excludeFiles": [
+        "node_modules/three-em-0-3-09/**/*.node",
+        "node_modules/three-em-0-3-12/**/*.node",
+        "node_modules/three-em-0-3-13/**/*.node",
+        "node_modules/three-em-0-3-14/**/*.node"
+      ]
     }
   }
 }
