@@ -5,18 +5,8 @@ import Router, { useRouter } from 'next/router';
 import { useGettUser } from '../hooks/useGettUser';
 import { PermissionType } from 'arconnect';
 import { UserProps } from '../types';
-import { fetchData } from '../utils/getData';
 import styled from 'styled-components';
-
-export async function getServerSideProps() {
-  const { users } = await fetchData();
-
-  return {
-    props: {
-      users,
-    },
-  };
-}
+import { useGetAllData } from '../hooks/useGetAllData';
 
 enum NavItemsProps {
   NEW = 'new',
@@ -114,11 +104,30 @@ const NavUsername = styled.a`
   text-decoration: none;
 `;
 
-const Nav = ({ users }: { users: UserProps[] }) => {
+export async function getServerSideProps() {
+  const url = `https://api.exm.dev/read/${process.env.TEST_FUNCTION_ID}`;
+  const res = await fetch(url, {
+    method: 'GET',
+    headers: {
+      Accepts: 'application/json',
+    },
+  });
+  const data = await res.json();
+  const { users } = data;
+
+  return {
+    props: {
+      users,
+    },
+  };
+}
+
+const Nav = () => {
   const router = useRouter(),
     arconnect = useArconnect(),
     { currentUser } = useGettUser(),
-    navItems = Object.values(NavItemsProps);
+    navItems = Object.values(NavItemsProps),
+    { users } = useGetAllData();
 
   const handleConnect = async () => {
     await window.arweaveWallet.connect(
@@ -127,8 +136,11 @@ const Nav = ({ users }: { users: UserProps[] }) => {
         name: 'CommunityLabs News',
       }
     );
+
     const address = await window.arweaveWallet.getActiveAddress();
-    const user = users.find((user) => user.walletAddress === address);
+    const user = users.find(
+      (user: UserProps) => user.walletAddress === address
+    );
 
     if (user) {
       const { userName, walletAddress } = user;
