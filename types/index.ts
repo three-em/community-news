@@ -1,3 +1,11 @@
+export interface Comment {
+  id: string;
+  postID: string;
+  text: string;
+  author: string;
+  timePosted: Date;
+  comments: Array<Comment>;
+}
 export interface PostProps {
   postID: string;
   author: {
@@ -8,6 +16,7 @@ export interface PostProps {
   description: string;
   upvotes: number;
   timeCreated: number;
+  comments: Array<Comment>;
 }
 
 export interface UserProps {
