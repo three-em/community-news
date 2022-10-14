@@ -6,15 +6,7 @@ import * as Styled from '../styles/home';
 import { fetchData } from '../utils/getData';
 
 export async function getServerSideProps() {
-  const url = `https://api.exm.dev/read/${process.env.FUNCTION_ID}`;
-  const res = await fetch(url, {
-    method: 'GET',
-    headers: {
-      Accepts: 'application/json',
-    },
-  });
-  const data = await res.json();
-  const { posts } = data;
+  const { posts } = await fetchData();
 
   return {
     props: {

@@ -7,6 +7,7 @@ import { PermissionType } from 'arconnect';
 import { UserProps } from '../types';
 import styled from 'styled-components';
 import { useGetAllData } from '../hooks/useGetAllData';
+import { fetchData } from '../utils/getData';
 
 enum NavItemsProps {
   NEW = 'new',
@@ -105,15 +106,7 @@ const NavUsername = styled.a`
 `;
 
 export async function getServerSideProps() {
-  const url = `https://api.exm.dev/read/${process.env.TEST_FUNCTION_ID}`;
-  const res = await fetch(url, {
-    method: 'GET',
-    headers: {
-      Accepts: 'application/json',
-    },
-  });
-  const data = await res.json();
-  const { users } = data;
+  const { users } = await fetchData();
 
   return {
     props: {
