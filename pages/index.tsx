@@ -3,9 +3,10 @@ import Head from 'next/head';
 import Post from '../components/Post';
 import { PostProps } from '../types';
 import * as Styled from '../styles/home';
+import { fetchData } from '../utils/getData';
 
 export async function getServerSideProps() {
-  const url = `https://api.exm.dev/read/${process.env.TEST_FUNCTION_ID}`;
+  const url = `https://api.exm.dev/read/${process.env.FUNCTION_ID}`;
   const res = await fetch(url, {
     method: 'GET',
     headers: {
@@ -23,6 +24,8 @@ export async function getServerSideProps() {
 }
 
 const Home = ({ posts }: { posts: PostProps[] }) => {
+  console.log('POSTS', posts);
+
   return (
     <Styled.Container>
       <Head>
