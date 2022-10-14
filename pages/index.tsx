@@ -2,11 +2,18 @@ import Link from 'next/link';
 import Head from 'next/head';
 import Post from '../components/Post';
 import { PostProps } from '../types';
-import { fetchData } from '../utils/getData';
 import * as Styled from '../styles/home';
 
 export async function getServerSideProps() {
-  const { posts } = await fetchData();
+  const url = `https://api.exm.dev/read/${process.env.TEST_FUNCTION_ID}`;
+  const res = await fetch(url, {
+    method: 'GET',
+    headers: {
+      Accepts: 'application/json',
+    },
+  });
+  const data = await res.json();
+  const { posts } = data;
 
   return {
     props: {

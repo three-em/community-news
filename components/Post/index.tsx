@@ -2,10 +2,10 @@ import Link from 'next/link';
 import { UserProps } from '../../types';
 import { useEffect, useState } from 'react';
 import { fetchData } from '../../utils/getData';
-import { useGettUser } from '../../hooks/useGettUser';
+import { useGettUser } from '../../hooks/useGetUser';
 import { ThumbsupIcon, NorthStarIcon } from '@primer/octicons-react';
 import * as Styled from './styles';
-import * as utils from '../../utils/utils';
+import * as utils from '../../utils/helpers';
 
 interface PostComponentProps {
   users?: UserProps[];

@@ -1,34 +1,23 @@
-import Nav from '../components/Nav';
 import type { AppProps } from 'next/app';
-import { createGlobalStyle } from 'styled-components';
-import { CurrentUserProvider } from '../reducers/userContext';
+import Nav from '../components/Nav';
+import { ThemeProvider, DefaultTheme } from 'styled-components';
+import GlobalStyle from '../components/globalstyles';
 
-const GlobalStyles = createGlobalStyle`
-  @font-face {
-    font-family: 'NotoSansMono';
-    src: url('../assets/fonts/NotoSansMono.ttf') format('truetype');
-  }
+const theme: DefaultTheme = {
+  colors: {
+    primary: '#111',
+    secondary: '#0070f3',
+  },
+};
 
-  body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Courier New', Courier, monospace;
-  }
-
-  
-`;
-
-function MyApp({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
-      <GlobalStyles />
-      <CurrentUserProvider>
+      <ThemeProvider theme={theme}>
         <Nav />
+        <GlobalStyle />
         <Component {...pageProps} />
-      </CurrentUserProvider>
+      </ThemeProvider>
     </>
   );
 }
-
-export default MyApp;

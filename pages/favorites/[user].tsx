@@ -1,6 +1,6 @@
 import React from 'react';
 import Post from '../../components/Post';
-import { useGettUser } from '../../hooks/useGettUser';
+import { useGettUser } from '../../hooks/useGetUser';
 import { PostProps } from '../../types';
 import { fetchData } from '../../utils/getData';
 

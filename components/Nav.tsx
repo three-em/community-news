@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import useArconnect from 'use-arconnect';
 import Router, { useRouter } from 'next/router';
-import { useGettUser } from '../hooks/useGettUser';
+import { useGettUser } from '../hooks/useGetUser';
 import { PermissionType } from 'arconnect';
 import { UserProps } from '../types';
 import styled from 'styled-components';

@@ -1,7 +1,7 @@
 import React from 'react';
 import Post from '../../components/Post';
 import { useRouter } from 'next/router';
-import { useGettUser } from '../../hooks/useGettUser';
+import { useGettUser } from '../../hooks/useGetUser';
 import { PostProps, UserProps } from '../../types';
 import { fetchData } from '../../utils/getData';
 

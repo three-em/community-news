@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { PostProps } from '../../types';
 import { ThumbsupIcon } from '@primer/octicons-react';
-import { getShortUrl, getPostDate } from '../../utils/utils';
+import { getShortUrl, getPostDate } from '../../utils/helpers';
 import * as Styled from '../../styles/postView';
 import { fetchData } from '../../utils/getData';
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import { useGettUser } from '../../hooks/useGettUser';
+import { useGettUser } from '../../hooks/useGetUser';
 
 const UserProfile = () => {
   const router = useRouter(),

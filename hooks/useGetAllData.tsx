@@ -10,7 +10,9 @@ export const useGetAllData = () => {
     (async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/readexm'),
+        const response = await fetch(
+            `/https://api.exm.dev/read/${process.env.FUNCTION_ID}`
+          ),
           allPosts = await response.json(),
           { posts, users } = allPosts.data;
         setPosts(posts);

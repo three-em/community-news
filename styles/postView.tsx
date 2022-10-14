@@ -4,7 +4,7 @@ const Wrapper = styled.div`
   display: flex;
   background-color: #f6f6ef;
   flex-direction: column;
-  
+
   @media (min-width: 1100px) {
     width: 81%;
     margin: auto;

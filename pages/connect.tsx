@@ -2,7 +2,7 @@ import Router from 'next/router';
 import * as Styled from '../styles/connect';
 import React, { useState, useEffect } from 'react';
 import { UserProps } from '../types';
-import { useGettUser } from '../hooks/useGettUser';
+import { useGettUser } from '../hooks/useGetUser';
 import { fetchData } from '../utils/getData';
 
 export async function getServerSideProps() {
@@ -127,3 +127,33 @@ const Connect = ({ users }: { users: UserProps[] }) => {
 };
 
 export default Connect;
+
+// await fetch('/api/write-exm', {
+//   method: 'POST',
+//   body: JSON.stringify({
+//     input: {
+//       functionRole: 'addUser',
+//       walletAddress: address,
+//       userName: userName.toLowerCase(),
+//       upvotedPosts: [],
+//       favorites: [],
+//       bio: '',
+//     },
+//   }),
+//   headers: {
+//     'Content-type': 'application/json; charset=UTF-8',
+//   },
+// });
+
+// inputs: [
+//   {
+//     input: JSON.stringify({
+//       walletAddress: address,
+//       userName: userName.toLowerCase(),
+//       upvotedPosts: [],
+//       favorites: [],
+//       bio: '',
+//     }),
+//     tags: [],
+//   },
+// ],

@@ -1,7 +1,7 @@
 import Router from 'next/router';
 import { v4 as uuid } from 'uuid';
 import React, { useState } from 'react';
-import { useGettUser } from '../hooks/useGettUser';
+import { useGettUser } from '../hooks/useGetUser';
 import * as Styled from '../styles/submit';
 import { UserProps } from '../types';
 import { fetchData } from '../utils/getData';
