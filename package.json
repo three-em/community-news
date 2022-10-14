@@ -1,11 +1,13 @@
 {
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next",
     "build": "next build",
     "start": "next start"
   },
   "dependencies": {
+    "@execution-machine/sdk": "^0.1.42",
     "@primer/octicons-react": "^17.7.0",
     "arconnect": "^0.4.2",
     "next": "latest",

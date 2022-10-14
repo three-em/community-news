@@ -16,8 +16,6 @@ export async function getServerSideProps() {
 }
 
 const Home = ({ posts }: { posts: PostProps[] }) => {
-  console.log('POSTS', posts);
-
   return (
     <Styled.Container>
       <Head>
