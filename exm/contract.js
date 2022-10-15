@@ -10,13 +10,13 @@ export function handle(state, action) {
     CREATE_REPLY: 'createReply'
   }
 
-  const { inputs, functionRole } = action.input;
-
-  let inputData;
+  let inputData, functionRole;
+  const { inputs } = action.input;
 
   if (inputs) {
-    const { data: stringifiedData } = inputs[0];
+    const { input: stringifiedData } = inputs[0];
     inputData = JSON.parse(stringifiedData);
+    functionRole = inputData.functionRole;
   }
 
   const getUser = (username) => {

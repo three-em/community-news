@@ -12,9 +12,9 @@ const initialState = {
 const testData = {
   addUser: {
     input: {
-      functionRole: 'addUser',
       inputs: [{
         data: JSON.stringify({
+          functionRole: 'addUser',
           walletAddress: 'Am_iBfzjo5g7VMdlYvLINmk6XRJlA0mg725BZM0hXGk',
           userName: 'codingknite',
           upvotedPosts: [],

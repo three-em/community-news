@@ -65,7 +65,7 @@ const Connect = ({ users }: { users: UserProps[] }) => {
         await fetch('/api/write-exm', {
           method: 'POST',
           body: JSON.stringify({
-            input: {
+            data: {
               functionRole: 'addUser',
               walletAddress: address,
               userName: userName.toLowerCase(),
@@ -74,9 +74,6 @@ const Connect = ({ users }: { users: UserProps[] }) => {
               bio: '',
             },
           }),
-          headers: {
-            'Content-type': 'application/json; charset=UTF-8',
-          },
         });
         localStorage.setItem(
           'user',
@@ -127,33 +124,3 @@ const Connect = ({ users }: { users: UserProps[] }) => {
 };
 
 export default Connect;
-
-// await fetch('/api/write-exm', {
-//   method: 'POST',
-//   body: JSON.stringify({
-//     input: {
-//       functionRole: 'addUser',
-//       walletAddress: address,
-//       userName: userName.toLowerCase(),
-//       upvotedPosts: [],
-//       favorites: [],
-//       bio: '',
-//     },
-//   }),
-//   headers: {
-//     'Content-type': 'application/json; charset=UTF-8',
-//   },
-// });
-
-// inputs: [
-//   {
-//     input: JSON.stringify({
-//       walletAddress: address,
-//       userName: userName.toLowerCase(),
-//       upvotedPosts: [],
-//       favorites: [],
-//       bio: '',
-//     }),
-//     tags: [],
-//   },
-// ],
