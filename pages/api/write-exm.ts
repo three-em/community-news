@@ -4,7 +4,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const functionId = `${process.env.FUNCTION_ID}`;
+  const functionId = process.env.FUNCTION_ID;
   const url = `https://api.exm.dev/api/transactions?token=${process.env.EXM_TOKEN}`;
 
   try {
