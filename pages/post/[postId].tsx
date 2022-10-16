@@ -43,7 +43,7 @@ const ViewPost = ({ posts }: { posts: PostProps[] }) => {
               </Styled.PostTitle>
               <Styled.PostAuthor>
                 posted by {post.author.userName} {getPostDate(post.timeCreated)}{' '}
-                |
+                ago |
                 {post.comments.length
                   ? ` ${post.comments.length} comments`
                   : ' No Comments'}
