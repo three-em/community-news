@@ -2,14 +2,16 @@ import { useEffect, useState } from 'react';
 import { UserProps } from '../types';
 
 const useGettUser = () => {
-  const userState: UserProps = {
+  const initialUserState: UserProps = {
     userName: '',
     walletAddress: '',
     favorites: [],
     upvotedPosts: [],
     bio: '',
+    creationDate: new Date(),
   };
-  const [currentUser, setCurrentUser] = useState(userState);
+
+  const [currentUser, setCurrentUser] = useState(initialUserState);
 
   useEffect(() => {
     try {

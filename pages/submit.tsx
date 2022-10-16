@@ -38,7 +38,7 @@ const Submit = ({ users }: { users: UserProps[] }) => {
         await fetch('/api/write-exm', {
           method: 'POST',
           body: JSON.stringify({
-            input: {
+            data: {
               functionRole: 'createPost',
               postID: uuid(),
               author: {
@@ -52,10 +52,8 @@ const Submit = ({ users }: { users: UserProps[] }) => {
               comments: [],
             },
           }),
-          headers: {
-            'Content-type': 'application/json; charset=UTF-8',
-          },
         });
+
         setFormData({
           ...formData,
           title: '',

@@ -36,7 +36,7 @@ const Home = ({ posts }: { posts: PostProps[] }) => {
               upvotes={post.upvotes}
               userPosted={post.author.userName}
               timeCreated={post.timeCreated}
-              numberOfComments={0}
+              numberOfComments={post.comments.length}
             />
           ))
         ) : (

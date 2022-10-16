@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
+import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useGettUser } from '../../hooks/useGetUser';
+import { useGetAllData } from '../../hooks/useGetAllData';
 
 const UserProfile = () => {
   const router = useRouter(),
-    { username: reqUser } = router.query,
+    { username: queriedUser } = router.query,
     [bio, setBio] = useState(''),
-    { userName, bio: currentBio } = useGettUser().currentUser;
+    { userName } = useGettUser().currentUser,
+    { users } = useGetAllData();
+
+  const user = users.find((user) => (user.userName = queriedUser as string));
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setBio(e.target.value);
@@ -17,9 +22,11 @@ const UserProfile = () => {
       await fetch('/api/write-exm', {
         method: 'POST',
         body: JSON.stringify({
-          functionRole: 'updateBio',
-          userName,
-          bio,
+          data: {
+            functionRole: 'updateBio',
+            userName,
+            bio,
+          },
         }),
       });
     } catch (error) {
@@ -27,16 +34,19 @@ const UserProfile = () => {
     }
   };
 
+  if (!user) return <p>Loading</p>;
+
   return (
     <>
-      {reqUser === userName ? (
+      {queriedUser === userName ? (
         <>
           <p>
-            user: <span>codingknite</span>
+            user: <span>{user.userName}</span>
           </p>
 
           <p>
-            created: <span>date</span>
+            created:{' '}
+            <span>{moment(user.creationDate).format('MMMM, DD, YYYY')}</span>
           </p>
 
           <p>
@@ -47,7 +57,7 @@ const UserProfile = () => {
                 id=''
                 cols={30}
                 rows={10}
-                value={currentBio ? currentBio : bio}
+                value={user.bio}
                 onChange={handleChange}
               ></textarea>
             </span>
@@ -60,27 +70,28 @@ const UserProfile = () => {
             <a href={`/favorites/${userName}`}>favorite submissions</a>
           </div>
 
-          <button disabled={!bio} onClick={submitBioUpdate}>
+          <button disabled={!bio || bio === user.bio} onClick={submitBioUpdate}>
             update
           </button>
         </>
       ) : (
         <>
           <p>
-            user: <span>codingknite</span>
+            user: <span>{queriedUser}</span>
           </p>
 
           <p>
-            created: <span>date</span>
+            created:{' '}
+            <span>{moment(user.creationDate).format('MMMM, DD, YYYY')}</span>
           </p>
 
           <p>
-            about: <span>yolo</span>
+            about: <span>{user.bio}</span>
           </p>
 
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <a href={`/submissions/${userName}`}>submissions</a>
-            <a href='/favorites'>favorites</a>
+            <a href={`/submissions/${queriedUser}`}>submissions</a>
+            <a href={`/favorites/${queriedUser}`}>favorites</a>
           </div>
         </>
       )}
@@ -89,5 +100,3 @@ const UserProfile = () => {
 };
 
 export default UserProfile;
-
-// todo - TEST UPDATING BIO

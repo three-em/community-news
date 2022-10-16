@@ -72,6 +72,7 @@ const Connect = ({ users }: { users: UserProps[] }) => {
               upvotedPosts: [],
               favorites: [],
               bio: '',
+              creationData: new Date(),
             },
           }),
         });
@@ -84,7 +85,7 @@ const Connect = ({ users }: { users: UserProps[] }) => {
       }
     };
 
-    if (!currentUser.userName && !currentUser.walletAddress) {
+    if (!currentUser.userName && !currentUser.walletAddress && !userExists) {
       await postUser();
       Router.push('/');
     }

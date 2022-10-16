@@ -25,4 +25,5 @@ export interface UserProps {
   upvotedPosts: string[];
   favorites: string[];
   bio: string;
+  creationDate: Date;
 }

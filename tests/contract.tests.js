@@ -12,102 +12,69 @@ const initialState = {
 const testData = {
   addUser: {
     input: {
-      inputs: [{
-        data: JSON.stringify({
-          functionRole: 'addUser',
-          walletAddress: 'Am_iBfzjo5g7VMdlYvLINmk6XRJlA0mg725BZM0hXGk',
-          userName: 'codingknite',
-          upvotedPosts: [],
-          favorites: [],
-          bio: '',
-        }),
-        tags: [],
-      }],
-    }
+      functionRole: 'addUser',
+      walletAddress: 'Am_iBfzjo5g7VMdlYvLINmk6XRJlA0mg725BZM0hXGk',
+      userName: 'codingknite',
+      upvotedPosts: [],
+      favorites: [],
+      bio: '',
+      creationDate: new Date()
+    },
   },
   updateBio: {
     input: {
       functionRole: 'updateBio',
-      inputs: [{
-        data: JSON.stringify({
-          userName: 'codingknite',
-          bio: 'testing this out',
-        }),
-        tags: []
-      }]
+      userName: 'codingknite',
+      bio: 'testing this out',
     },
   },
   favorites: {
     input: {
       functionRole: 'addFavorite',
-      inputs: [{
-        data: JSON.stringify({
-          userName: 'codingknite',
-          postID: testPostId
-        }),
-        tags: []
-      }],
+      userName: 'codingknite',
+      postID: testPostId
     },
   },
   createPost: {
     input: {
       functionRole: 'createPost',
-      inputs: [{
-        data: JSON.stringify({
-          postID: testPostId,
-          author: {
-            userName: 'codingknite',
-          },
-          timeCreated: new Date().getTime(), // change plain Date
-          title: 'Testing Locally',
-          url: new URL('https://testinglocally.com'),
-          description: 'Description Testing Locally',
-          upvotes: 0,
-          comments: [], // todo - implement this in the frontend
-        }),
-        tags: [],
-      }]
+      postID: testPostId,
+      author: {
+        userName: 'codingknite',
+      },
+      timeCreated: new Date().getTime(), // change plain Date
+      title: 'Testing Locally',
+      url: new URL('https://testinglocally.com'),
+      description: 'Description Testing Locally',
+      upvotes: 0,
+      comments: [], // todo - implement this in the frontend
     },
   },
   upvote: {
     input: {
       functionRole: 'upVote',
-      inputs: [{
-        data: JSON.stringify({
-          postID: testPostId,
-          userName: 'codingknite',
-        }),
-        tags: [],
-      }]
+      postID: testPostId,
+      userName: 'codingknite',
     },
   },
   downvote: {
     input: {
       functionRole: 'downVote',
-      inputs: [{
-        data: JSON.stringify({
-          postID: testPostId,
-          userName: 'codingknite',
-        }),
-        tags: [],
-      }],
+      postID: testPostId,
+      userName: 'codingknite',
     },
   },
   createComment: {
     input: {
       functionRole: 'createComment',
-      inputs: [{
-        data: JSON.stringify({
-          postID: testPostId,
-          comment: {
-            id: testCommentId,
-            text: 'this is a comment',
-            author: 'codingknite',
-            timePosted: new Date(),
-          }
-        }),
-        tags: [],
-      }]
+      postID: testPostId,
+      comment: {
+        id: testCommentId,
+        text: 'this is a comment',
+        author: 'codingknite',
+        timePosted: new Date(),
+        comments: []
+      }
     }
   }
 }

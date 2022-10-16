@@ -38,7 +38,7 @@ const Post = ({
   userPosted,
   upvotes,
   timeCreated,
-  numberOfComments, // todo
+  numberOfComments,
 }: PostComponentProps) => {
   const [showThumbsup, setShowThumbsup] = useState(false),
     shortUrl = utils.getShortUrl(url),
@@ -63,7 +63,7 @@ const Post = ({
     await fetch('/api/write-exm', {
       method: 'POST',
       body: JSON.stringify({
-        input: {
+        data: {
           functionRole: action,
           postID: postId,
           userName,
