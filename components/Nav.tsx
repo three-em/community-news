@@ -9,6 +9,10 @@ import styled from 'styled-components';
 import { useGetAllData } from '../hooks/useGetAllData';
 import { fetchData } from '../utils/getData';
 
+interface ContainerProps {
+  path: string;
+}
+
 enum NavItemsProps {
   NEW = 'new',
   PAST = 'past',
@@ -19,9 +23,6 @@ enum NavItemsProps {
 
 const NavWrapper = styled.nav`
   background-color: #662eff;
-  display: flex;
-  padding: 0.5rem;
-  justify-content: space-between;
 
   @media (min-width: 1100px) {
     width: 80%;
@@ -30,27 +31,34 @@ const NavWrapper = styled.nav`
   }
 `;
 
-const SubmitNav = styled.div`
+const NavContainer = styled.div<ContainerProps>`
+  width: 100%;
   display: flex;
-  gap: 1rem;
+  align-items: center;
+  justify-content: ${(props) =>
+    props.path === '/submit' ? 'flex-start' : 'space-between'};
+  padding: 0.2rem;
 
-  .cnews {
-    cursor: pointer;
+  > a {
+    color: #fff;
+    font-size: 1.05rem;
+    font-weight: 800;
+    text-decoration: none;
   }
+`;
 
+const SubmitNav = styled.div`
   p {
+    font-size: 1rem;
+    color: #fff;
     font-weight: 800;
     margin: 0;
+    padding-left: 0.1rem;
   }
 `;
 
 const NavItems = styled.div`
-  > a {
-    color: #000;
-    font-size: 1.1rem;
-    font-weight: 800;
-    text-decoration: none;
-  }
+  color: #fff;
 
   > ul {
     list-style: none;
@@ -63,7 +71,6 @@ const NavItems = styled.div`
 
     li {
       a {
-        color: #000;
         font-size: 13px;
         text-decoration: none;
       }
@@ -79,8 +86,10 @@ const NavItems = styled.div`
 `;
 
 const NavConnect = styled.div`
+  justify-self: flex-end;
   a {
     font-size: 14px;
+    color: #fff;
   }
 
   @media (min-width: 760px) {
@@ -98,7 +107,7 @@ const NavConnect = styled.div`
 
 const NavUsername = styled.a`
   margin: 0;
-  color: #000;
+  color: #fff;
   font-size: 15px;
   font-weight: 550;
   cursor: pointer;
@@ -156,49 +165,48 @@ const Nav = () => {
 
   return (
     <NavWrapper>
-      {router.pathname === '/submit' ? (
-        <SubmitNav>
-          <p onClick={() => Router.push('/')} className='cnews'>
-            Community News /
-          </p>
-          <p>Submit</p>
-        </SubmitNav>
-      ) : (
-        <>
-          <NavItems>
-            <Link href='/'>Community News</Link>
-            <ul>
-              {navItems.map((item: string, index) => (
+      <NavContainer path={router.pathname}>
+        <Link href='/'>Community News</Link>
+        {router.pathname === '/submit' ? (
+          <SubmitNav>
+            <p>/ Submit</p>
+          </SubmitNav>
+        ) : (
+          <>
+            <NavItems>
+              <ul>
+                {navItems.map((item: string, index) => (
+                  <>
+                    <li key={index}>
+                      <Link href={`/${item}`}>{item}</Link>
+                    </li>
+                    <span>|</span>
+                  </>
+                ))}
+              </ul>
+            </NavItems>
+            <NavConnect>
+              {currentUser.userName && currentUser.walletAddress ? (
                 <>
-                  <li key={index}>
-                    <Link href={`/${item}`}>{item}</Link>
-                  </li>
-                  <span>|</span>
+                  <NavUsername href={`/user/${currentUser.userName}`}>
+                    {currentUser.userName}
+                  </NavUsername>
                 </>
-              ))}
-            </ul>
-          </NavItems>
-          <NavConnect>
-            {currentUser.userName && currentUser.walletAddress ? (
-              <>
-                <NavUsername href={`/user/${currentUser.userName}`}>
-                  {currentUser.userName}
-                </NavUsername>
-              </>
-            ) : null}
+              ) : null}
 
-            {arconnect === undefined ? (
-              <a onClick={() => window.open('https://arconnect.io')}>
-                install arConnect
-              </a>
-            ) : currentUser.userName && currentUser.walletAddress ? (
-              <a onClick={signOut}>| signout</a>
-            ) : (
-              <a onClick={handleConnect}>connect</a>
-            )}
-          </NavConnect>
-        </>
-      )}
+              {arconnect === undefined ? (
+                <a onClick={() => window.open('https://arconnect.io')}>
+                  install arConnect
+                </a>
+              ) : currentUser.userName && currentUser.walletAddress ? (
+                <a onClick={signOut}>| signout</a>
+              ) : (
+                <a onClick={handleConnect}>connect</a>
+              )}
+            </NavConnect>
+          </>
+        )}
+      </NavContainer>
     </NavWrapper>
   );
 };

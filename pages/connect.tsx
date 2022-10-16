@@ -24,6 +24,9 @@ const Connect = ({ users }: { users: UserProps[] }) => {
   useEffect(() => {
     (async () => {
       try {
+        if (currentUser.userName && currentUser.walletAddress) {
+          Router.push('/');
+        }
         const allUserNames = users.map((user: UserProps) => user.userName);
         setUserNames(allUserNames);
         const doesUserExist = users.some(
@@ -91,35 +94,33 @@ const Connect = ({ users }: { users: UserProps[] }) => {
     }
   };
 
+  if (currentUser.userName && currentUser.walletAddress)
+    return <p>redirecting....</p>;
+
   return (
     <>
       {userName.length === 0 ? null : <p>{formValidation()}</p>}
-      {currentUser.userName && currentUser.walletAddress ? (
-        <Styled.ConnectHeader>
-          your arconnect wallet is already connected to community news
-        </Styled.ConnectHeader>
-      ) : (
-        <form action='' onSubmit={handleSubmit}>
-          <label>
-            username:
-            <input
-              value={userName}
-              onChange={handleChange}
-              style={{
-                border: `${
-                  userNames.includes(userName) ||
-                  (userName.length > 0 && !validateUserNameLength())
-                    ? '1.5px solid red'
-                    : '1.5px solid gray'
-                }`,
-                outline: 'none',
-              }}
-            />
-          </label>
 
-          <button disabled={validateUsername()}>Connect</button>
-        </form>
-      )}
+      <form action='' onSubmit={handleSubmit}>
+        <label>
+          username:
+          <input
+            value={userName}
+            onChange={handleChange}
+            style={{
+              border: `${
+                userNames.includes(userName) ||
+                (userName.length > 0 && !validateUserNameLength())
+                  ? '1.5px solid red'
+                  : '1.5px solid gray'
+              }`,
+              outline: 'none',
+            }}
+          />
+        </label>
+
+        <button disabled={validateUsername()}>Connect</button>
+      </form>
     </>
   );
 };

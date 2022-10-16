@@ -128,7 +128,7 @@ const Submit = ({ users }: { users: UserProps[] }) => {
               }}
             />
           </Styled.FormItem>
-          <Styled.SubmitButton>Sumbit</Styled.SubmitButton>
+          <Styled.SubmitButton>Submit</Styled.SubmitButton>
 
           <p>
             Leave url blank to submit a question for discussion. If there is no
