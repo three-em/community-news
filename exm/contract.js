@@ -10,14 +10,7 @@ export function handle(state, action) {
     CREATE_REPLY: 'createReply'
   }
 
-  let inputData, functionRole;
-  const { inputs } = action.input;
-
-  if (inputs) {
-    const { input: stringifiedData } = inputs[0];
-    inputData = JSON.parse(stringifiedData);
-    functionRole = inputData.functionRole;
-  }
+  const { functionRole } = action.input;
 
   const getUser = (username) => {
     const user = state.users.find((user) => user.userName === username);
@@ -27,12 +20,12 @@ export function handle(state, action) {
   }
 
   if (functionRole === actions.ADD_USER) {
-    const { walletAddress, userName, upvotedPosts, favorites, bio } = inputData;
-    state.users.push({ walletAddress, userName, upvotedPosts, favorites, bio });
+    const { walletAddress, userName, upvotedPosts, favorites, bio, creationDate } = action.input;
+    state.users.push({ walletAddress, userName, upvotedPosts, favorites, bio, creationDate });
   };
 
   if (functionRole === actions.UPDATE_BIO) {
-    const { userName, bio } = inputData;
+    const { userName, bio } = action.input;
     const { userIndex } = getUser(userName);
     if (state.users.length > 0) {
       state.users[userIndex].bio = bio;
@@ -40,7 +33,7 @@ export function handle(state, action) {
   };
 
   if (functionRole === actions.ADD_FAVORITE) {
-    const { userName, postID } = inputData;
+    const { userName, postID } = action.input;
     const { userIndex } = getUser(userName);
     if (state.users.length > 0) {
       state.users[userIndex].favorites.push(postID);
@@ -48,12 +41,12 @@ export function handle(state, action) {
   };
 
   if (functionRole === actions.CREATE_POST) {
-    const { postID, author, title, url, description, upvotes, timeCreated, comments } = inputData;
+    const { postID, author, title, url, description, upvotes, timeCreated, comments } = action.input;
     state.posts.unshift({ postID, author, title, url, description, upvotes, timeCreated, comments });
   }
 
   if (functionRole === actions.UPVOTE) {
-    const { postID, userName } = inputData;
+    const { postID, userName } = action.input;
     const postIndex = state.posts.findIndex((post) => post.postID === postID)
     const userIndex = state.users.findIndex((user) => user.userName === userName)
     state.posts[postIndex].upvotes += 1;
@@ -61,7 +54,7 @@ export function handle(state, action) {
   }
 
   if (functionRole === actions.DOWNVOTE) {
-    const { postID, userName } = inputData;
+    const { postID, userName } = action.input;
     const postIndex = state.posts.findIndex((post) => post.postID === postID)
     const userIndex = state.users.findIndex((user) => user.userName === userName)
     const upvotedIndex = state.users[userIndex].upvotedPosts.findIndex((post) => post === postID);
@@ -70,7 +63,7 @@ export function handle(state, action) {
   }
 
   if (functionRole === actions.CREATE_COMMENT) {
-    const { comment, postID } = inputData;
+    const { comment, postID } = action.input;
     const postIndex = state.posts.findIndex((post) => post.postID === postID);
     state.posts[postIndex].comments.push(comment);
   }
