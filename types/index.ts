@@ -1,9 +1,8 @@
 export interface Comment {
   id: string;
-  postID: string;
   text: string;
   author: string;
-  timePosted: Date;
+  timePosted: number;
   comments: Array<Comment>;
 }
 export interface PostProps {

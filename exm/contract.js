@@ -68,5 +68,23 @@ export function handle(state, action) {
     state.posts[postIndex].comments.push(comment);
   }
 
+  if (functionRole === actions.CREATE_REPLY) {
+    const { postID, commentID, comment } = action.input;
+    const post = state.posts.find((post) => post.postID === postID);
+    const { comments } = post;
+
+    const addReply = (commentsArr, userComment) => {
+      for (let comment of commentsArr) {
+        if (comment.id === commentID) {
+          comment.comments.push(userComment);
+        }
+        addReply(comment.comments, userComment);
+      }
+    }
+    if (comments.length > 0) {
+      addReply(comments, comment);
+    };
+  }
+
   return { state };
 }

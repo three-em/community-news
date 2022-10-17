@@ -171,6 +171,10 @@ const Nav = () => {
           <SubmitNav>
             <p>/ Submit</p>
           </SubmitNav>
+        ) : router.pathname === '/reply' ? (
+          <SubmitNav>
+            <p>/ Reply</p>
+          </SubmitNav>
         ) : (
           <>
             <NavItems>

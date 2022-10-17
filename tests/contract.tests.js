@@ -3,7 +3,9 @@ import { readFileSync } from 'fs';
 import { TestFunction, createWrite, FunctionType } from '@execution-machine/sdk';
 
 const testPostId = 'e74e9d33-8f9a-44e3-b68f-21ef7031d887';
+const testPostId2 = 'e74e9Jka33-8f9a-44e3-b68f-21ef70317';
 const testCommentId = 'e71e6d89-3f94a-4e3-b686-213703187';
+const testCommentId2 = 'e71e6d89-3f94a-4e3-b686-2137031893';
 const initialState = {
   posts: [],
   users: [],
@@ -42,12 +44,12 @@ const testData = {
       author: {
         userName: 'codingknite',
       },
-      timeCreated: new Date().getTime(), // change plain Date
+      timeCreated: new Date().getTime(),
       title: 'Testing Locally',
       url: new URL('https://testinglocally.com'),
       description: 'Description Testing Locally',
       upvotes: 0,
-      comments: [], // todo - implement this in the frontend
+      comments: [],
     },
   },
   upvote: {
@@ -72,7 +74,33 @@ const testData = {
         id: testCommentId,
         text: 'this is a comment',
         author: 'codingknite',
-        timePosted: new Date(),
+        timePosted: new Date().getTime(),
+        comments: []
+      }
+    }
+  },
+  createReply: {
+    input: {
+      functionRole: 'createReply',
+      postID: testPostId,
+      commentID: testCommentId,
+      comment: {
+        id: testCommentId2,
+        text: 'this is a test reply fellas',
+        author: 'andres',
+        timePosted: 1665966332251,
+        comments: []
+      }
+    },
+    reply: {
+      functionRole: 'createReply',
+      postID: testPostId,
+      commentID: testCommentId2,
+      comment: {
+        id: testCommentId,
+        text: 'this is a test reply fellaseses',
+        author: 'andres',
+        timePosted: 1665966332251,
         comments: []
       }
     }
@@ -129,6 +157,12 @@ const createComment = await TestFunction({
   writes: [createWrite(testData.createPost.input), createWrite(testData.createComment.input)]
 })
 
+const createReply = await TestFunction({
+  functionSource: readFileSync('exm/contract.js'),
+  functionType: FunctionType.JAVASCRIPT,
+  functionInitState: initialState,
+  writes: [createWrite(testData.createPost.input), createWrite(testData.createComment.input), createWrite(testData.createReply.input)]
+})
 
 assert(createUser.state.users, [testData.addUser.input]);
 assert(updateBio.state.users, [testData.addUser.input, testData.updateBio.input]);
@@ -137,3 +171,6 @@ assert(createPost.state.posts, [testData.createPost.input]);
 assert(upVotePost.state.users, [testData.addUser.input, testData.createPost.input, testData.upvote.input]);
 assert(downVotePost.state.users, [testData.addUser.input, testData.createPost.input, testData.upvote.input, testData.downvote.input]);
 assert(createComment.state.posts, [testData.createPost.input, testData.createComment.input,])
+assert(createReply.state.posts, [testData.createPost.input, testData.createComment.input, testData.createReply.input])
+
+console.log('REPLY', createReply.state.posts[0].comments[0]);
