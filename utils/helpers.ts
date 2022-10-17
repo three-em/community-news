@@ -26,4 +26,12 @@ const getShortUrl = (url: string) => {
   return hostname;
 };
 
-export { getPostDate, getShortUrl };
+const isValidUrl = (url) => {
+  try {
+    return Boolean(new URL(url));
+  } catch (e) {
+    return false;
+  }
+};
+
+export { getPostDate, getShortUrl, isValidUrl };

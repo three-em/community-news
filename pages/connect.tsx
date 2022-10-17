@@ -17,6 +17,7 @@ export async function getServerSideProps() {
 
 const Connect = ({ users }: { users: UserProps[] }) => {
   const [userExists, setUserExists] = useState(false),
+    [connecting, setConnecting] = useState(false),
     [userName, setUserName] = useState(''),
     [userNames, setUserNames] = useState<string[]>([]),
     { currentUser } = useGettUser();
@@ -65,6 +66,7 @@ const Connect = ({ users }: { users: UserProps[] }) => {
     const postUser = async () => {
       try {
         const address = await window.arweaveWallet.getActiveAddress();
+        setConnecting(true);
         await fetch('/api/write-exm', {
           method: 'POST',
           body: JSON.stringify({
@@ -83,6 +85,7 @@ const Connect = ({ users }: { users: UserProps[] }) => {
           'user',
           JSON.stringify({ userName, walletAddress: address })
         );
+        setConnecting(false);
       } catch (error) {
         console.error(error);
       }
@@ -119,7 +122,9 @@ const Connect = ({ users }: { users: UserProps[] }) => {
           />
         </label>
 
-        <button disabled={validateUsername()}>Connect</button>
+        <button disabled={validateUsername()}>
+          {connecting ? 'Connecting...' : 'Connect'}
+        </button>
       </form>
     </>
   );

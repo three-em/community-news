@@ -1,10 +1,11 @@
 import Router from 'next/router';
-import { v4 as uuid } from 'uuid';
 import React, { useState } from 'react';
+import { v4 as uuid } from 'uuid';
 import { useGettUser } from '../hooks/useGetUser';
-import * as Styled from '../styles/submit';
 import { UserProps } from '../types';
 import { fetchData } from '../utils/getData';
+import { isValidUrl } from '../utils/helpers';
+import * as Styled from '../styles/submit';
 interface StateProps {
   title: string;
   url: string;
@@ -27,6 +28,7 @@ const Submit = ({ users }: { users: UserProps[] }) => {
       url: '',
       description: '',
     },
+    [submitting, setSubmitting] = useState(false),
     [formData, setFormData] = useState(initialState),
     { currentUser } = useGettUser(),
     { userName, walletAddress } = useGettUser().currentUser;
@@ -35,6 +37,7 @@ const Submit = ({ users }: { users: UserProps[] }) => {
     try {
       event?.preventDefault();
       if (userName && walletAddress) {
+        setSubmitting(true);
         await fetch('/api/write-exm', {
           method: 'POST',
           body: JSON.stringify({
@@ -60,6 +63,7 @@ const Submit = ({ users }: { users: UserProps[] }) => {
           url: '',
           description: '',
         });
+        setSubmitting(false);
         Router.push('/');
       }
     } catch (error) {
@@ -128,11 +132,15 @@ const Submit = ({ users }: { users: UserProps[] }) => {
               }}
             />
           </Styled.FormItem>
-          <Styled.SubmitButton>Submit</Styled.SubmitButton>
+          <Styled.SubmitButton
+            disabled={!isValidUrl(formData.url) || !formData.title}
+          >
+            {submitting ? 'Submitting...' : 'Submit'}
+          </Styled.SubmitButton>
 
           <p>
-            Leave url blank to submit a question for discussion. If there is no
-            url, text will appear at the top of the thread. If there is a url,
+            Leave link blank to submit a question for discussion. If there is no
+            link, post will appear at the top of the ask. If there is a link,
             text is optional.
           </p>
         </form>

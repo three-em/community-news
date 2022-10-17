@@ -3,7 +3,6 @@ import { readFileSync } from 'fs';
 import { TestFunction, createWrite, FunctionType } from '@execution-machine/sdk';
 
 const testPostId = 'e74e9d33-8f9a-44e3-b68f-21ef7031d887';
-const testPostId2 = 'e74e9Jka33-8f9a-44e3-b68f-21ef70317';
 const testCommentId = 'e71e6d89-3f94a-4e3-b686-213703187';
 const testCommentId2 = 'e71e6d89-3f94a-4e3-b686-2137031893';
 const initialState = {
@@ -172,5 +171,3 @@ assert(upVotePost.state.users, [testData.addUser.input, testData.createPost.inpu
 assert(downVotePost.state.users, [testData.addUser.input, testData.createPost.input, testData.upvote.input, testData.downvote.input]);
 assert(createComment.state.posts, [testData.createPost.input, testData.createComment.input,])
 assert(createReply.state.posts, [testData.createPost.input, testData.createComment.input, testData.createReply.input])
-
-console.log('REPLY', createReply.state.posts[0].comments[0]);

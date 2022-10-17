@@ -58,19 +58,35 @@ const ViewPost = ({ posts }: { posts: PostProps[] }) => {
   const router = useRouter(),
     { postId } = router.query,
     { currentUser } = useGettUser(),
+    [allPosts, setAllPosts] = useState(posts),
+    [refresh, setRefresh] = useState(false),
     [post, setPost] = useState<PostProps>(),
     [posting, setPosting] = useState(false),
     [commentText, setCommentText] = useState('');
 
   useEffect(() => {
     (async () => {
+      const response = await fetch('/api/read', {
+        method: 'GET',
+      });
+      const all = await response.json();
+      const { posts } = all.data;
+      setAllPosts(posts);
+      setRefresh(false);
+    })();
+  }, [refresh]);
+
+  useEffect(() => {
+    (async () => {
       try {
-        setPost(() => posts.find((post: PostProps) => post.postID === postId));
+        setPost(() =>
+          allPosts.find((post: PostProps) => post.postID === postId)
+        );
       } catch (error) {
         console.error(error);
       }
     })();
-  }, [posts, postId]);
+  }, [allPosts, postId]);
 
   const handleComment = async () => {
     const data: DataProps = {
@@ -93,6 +109,7 @@ const ViewPost = ({ posts }: { posts: PostProps[] }) => {
       });
       setCommentText('');
       setPosting(false);
+      setRefresh(true);
     } catch (error) {
       console.error(error);
     }

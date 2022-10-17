@@ -4,6 +4,8 @@ import Post from '../components/Post';
 import { PostProps } from '../types';
 import * as Styled from '../styles/home';
 import { fetchData } from '../utils/getData';
+import { useEffect, useState } from 'react';
+import { useGetAllData } from '../hooks/useGetAllData';
 
 export async function getServerSideProps() {
   const { posts } = await fetchData();
@@ -16,6 +18,19 @@ export async function getServerSideProps() {
 }
 
 const Home = ({ posts }: { posts: PostProps[] }) => {
+  const [allPosts, setAllPosts] = useState(posts);
+
+  useEffect(() => {
+    (async () => {
+      const response = await fetch('/api/read', {
+        method: 'GET',
+      });
+      const all = await response.json();
+      const { posts } = all.data;
+      setAllPosts(posts);
+    })();
+  }, []);
+
   return (
     <Styled.Container>
       <Head>
@@ -25,11 +40,11 @@ const Home = ({ posts }: { posts: PostProps[] }) => {
       </Head>
 
       <main>
-        {posts.length > 0 ? (
-          posts.map((post: PostProps) => (
+        {allPosts.length > 0 ? (
+          allPosts.map((post: PostProps) => (
             <Post
               key={post.postID}
-              num={posts.indexOf(post) + 1}
+              num={allPosts.indexOf(post) + 1}
               title={post.title}
               url={post.url}
               postId={post.postID}
