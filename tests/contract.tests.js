@@ -18,6 +18,7 @@ const testData = {
       userName: 'codingknite',
       upvotedPosts: [],
       favorites: [],
+      hidden: [],
       bio: '',
       creationDate: new Date()
     },
@@ -32,6 +33,13 @@ const testData = {
   favorites: {
     input: {
       functionRole: 'addFavorite',
+      userName: 'codingknite',
+      postID: testPostId
+    },
+  },
+  hidden: {
+    input: {
+      functionRole: 'hidePost',
       userName: 'codingknite',
       postID: testPostId
     },
@@ -74,7 +82,7 @@ const testData = {
         text: 'this is a comment',
         author: 'codingknite',
         timePosted: new Date().getTime(),
-        comments: []
+        replies: []
       }
     }
   },
@@ -83,27 +91,31 @@ const testData = {
       functionRole: 'createReply',
       postID: testPostId,
       commentID: testCommentId,
-      comment: {
+      reply: {
+        parentCommentAuthor: 'codingknite',
         id: testCommentId2,
         text: 'this is a test reply fellas',
         author: 'andres',
         timePosted: 1665966332251,
-        comments: []
-      }
-    },
-    reply: {
-      functionRole: 'createReply',
-      postID: testPostId,
-      commentID: testCommentId2,
-      comment: {
-        id: testCommentId,
-        text: 'this is a test reply fellaseses',
-        author: 'andres',
-        timePosted: 1665966332251,
-        comments: []
       }
     }
-  }
+  },
+  editComment: {
+    input: {
+      functionRole: 'editComment',
+      postID: testPostId,
+      commentID: testCommentId,
+      editedComment: 'this is another edited comment'
+    }
+  },
+  deleteComment: {
+    input: {
+      functionRole: 'deleteComment',
+      postID: testPostId,
+      commentID: testCommentId
+    }
+  },
+
 }
 
 const createUser = await TestFunction({
@@ -125,6 +137,13 @@ const addFavorite = await TestFunction({
   functionType: FunctionType.JAVASCRIPT,
   functionInitState: initialState,
   writes: [createWrite(testData.addUser.input), createWrite(testData.favorites.input)]
+})
+
+const hidePost = await TestFunction({
+  functionSource: readFileSync('exm/contract.js'),
+  functionType: FunctionType.JAVASCRIPT,
+  functionInitState: initialState,
+  writes: [createWrite(testData.addUser.input), createWrite(testData.hidden.input)]
 
 })
 
@@ -163,11 +182,33 @@ const createReply = await TestFunction({
   writes: [createWrite(testData.createPost.input), createWrite(testData.createComment.input), createWrite(testData.createReply.input)]
 })
 
+const editComment = await TestFunction({
+  functionSource: readFileSync('exm/contract.js'),
+  functionType: FunctionType.JAVASCRIPT,
+  functionInitState: initialState,
+  writes: [createWrite(testData.createPost.input), createWrite(testData.createComment.input), createWrite(testData.editComment.input)]
+})
+
+const deleteComment = await TestFunction({
+  functionSource: readFileSync('exm/contract.js'),
+  functionType: FunctionType.JAVASCRIPT,
+  functionInitState: initialState,
+  writes: [createWrite(testData.createPost.input), createWrite(testData.createComment.input), createWrite(testData.deleteComment.input)]
+})
+
+
+
 assert(createUser.state.users, [testData.addUser.input]);
 assert(updateBio.state.users, [testData.addUser.input, testData.updateBio.input]);
 assert(addFavorite.state.users, [testData.addUser.input, testData.favorites.input]);
+assert(hidePost.state.users, [testData.addUser.input, testData.hidden.input]);
 assert(createPost.state.posts, [testData.createPost.input]);
 assert(upVotePost.state.users, [testData.addUser.input, testData.createPost.input, testData.upvote.input]);
 assert(downVotePost.state.users, [testData.addUser.input, testData.createPost.input, testData.upvote.input, testData.downvote.input]);
 assert(createComment.state.posts, [testData.createPost.input, testData.createComment.input,])
 assert(createReply.state.posts, [testData.createPost.input, testData.createComment.input, testData.createReply.input])
+assert(editComment.state.posts, [testData.createPost.input, testData.createComment.input, testData.editComment.input])
+assert(deleteComment.state.posts, [testData.createPost.input, testData.createComment.input, testData.deleteComment.input])
+
+console.log('FAVS', addFavorite.state.users);
+console.log('HIDDEN', hidePost.state.users);

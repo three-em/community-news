@@ -7,7 +7,11 @@ export function handle(state, action) {
     CREATE_POST: 'createPost',
     ADD_FAVORITE: 'addFavorite',
     CREATE_COMMENT: 'createComment',
-    CREATE_REPLY: 'createReply'
+    CREATE_REPLY: 'createReply',
+    DELETE_COMMENT: 'deleteComment',
+    EDIT_COMMENT: 'editComment',
+    HIDE_POST: 'hidePost',
+    ADD_FAVORITE: 'addFavorite'
   }
 
   const { functionRole } = action.input;
@@ -20,8 +24,8 @@ export function handle(state, action) {
   }
 
   if (functionRole === actions.ADD_USER) {
-    const { walletAddress, userName, upvotedPosts, favorites, bio, creationDate } = action.input;
-    state.users.push({ walletAddress, userName, upvotedPosts, favorites, bio, creationDate });
+    const { walletAddress, userName, upvotedPosts, hidden, favorites, bio, creationDate } = action.input;
+    state.users.push({ walletAddress, userName, upvotedPosts, hidden, favorites, bio, creationDate });
   };
 
   if (functionRole === actions.UPDATE_BIO) {
@@ -37,6 +41,14 @@ export function handle(state, action) {
     const { userIndex } = getUser(userName);
     if (state.users.length > 0) {
       state.users[userIndex].favorites.push(postID);
+    }
+  };
+
+  if (functionRole === actions.HIDE_POST) {
+    const { userName, postID } = action.input;
+    const { userIndex } = getUser(userName);
+    if (state.users.length > 0) {
+      state.users[userIndex].hidden.push(postID);
     }
   };
 
@@ -69,21 +81,48 @@ export function handle(state, action) {
   }
 
   if (functionRole === actions.CREATE_REPLY) {
-    const { postID, commentID, comment } = action.input;
+    const { postID, commentID, reply } = action.input;
     const post = state.posts.find((post) => post.postID === postID);
+    const comment = post.comments.find((comment) => comment.id === commentID);
+    comment.replies.push(reply)
+  }
+
+  if (functionRole === actions.EDIT_COMMENT) {
+    const { postID, commentID, editedComment } = action.input;
+    const post = state.posts.find((post) => post.postID === postID);
+
     const { comments } = post;
 
-    const addReply = (commentsArr, userComment) => {
+    const editComment = (commentsArr, editedComment) => {
       for (let comment of commentsArr) {
         if (comment.id === commentID) {
-          comment.comments.push(userComment);
+          comment.text = editedComment;
         }
-        addReply(comment.comments, userComment);
+        editComment(comment.replies, editedComment);
       }
     }
     if (comments.length > 0) {
-      addReply(comments, comment);
+      editComment(comments, editedComment);
     };
+  }
+
+  if (functionRole === actions.DELETE_COMMENT) {
+    const { postID, commentID } = action.input;
+    const post = state.posts.find((post) => post.postID === postID);
+    const { comments } = post;
+
+    const deleteComment = (comments, commentID) => {
+      let index = 0;
+      for (let comment of comments) {
+        index += 1;
+        if (comment.id === commentID) {
+          comments.splice(index - 1, 1)
+        }
+        deleteComment(comment.replies, commentID)
+      }
+    }
+
+    deleteComment(comments, commentID)
   }
 
   return { state };
