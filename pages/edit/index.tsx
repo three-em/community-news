@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
 import Router, { useRouter } from 'next/router';
+import { Wrapper } from '../../styles/common';
+import styled from 'styled-components';
+
+const CustomWrapper = styled(Wrapper)`
+  padding: 1rem;
+`;
 
 const Edit = () => {
   const router = useRouter();
@@ -21,7 +27,6 @@ const Edit = () => {
         method: 'POST',
         body: JSON.stringify({ data }),
       });
-      console.log('DATA', data);
       setUpdating(false);
       setUpdate('');
       Router.push(`/post/${postID}`);
@@ -29,7 +34,7 @@ const Edit = () => {
   };
 
   return (
-    <div>
+    <CustomWrapper>
       <div>
         <p>Community News: {postTitle}</p>
         <p>{text}</p>
@@ -48,11 +53,15 @@ const Edit = () => {
           }}
         ></textarea>
 
-        <button onClick={handleEdit} disabled={!update}>
+        <button
+          onClick={handleEdit}
+          disabled={!update}
+          style={{ display: 'block', marginTop: '1rem' }}
+        >
           {updating ? 'updating...' : 'update'}
         </button>
       </>
-    </div>
+    </CustomWrapper>
   );
 };
 

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useGettUser } from '../../hooks/useGetUser';
 import { ThumbsupIcon, NorthStarIcon } from '@primer/octicons-react';
 import * as Styled from './styles';
+import { Button as StyledButton } from '../../styles/common';
 import * as utils from '../../utils/helpers';
 
 interface PostComponentProps {
@@ -121,7 +122,7 @@ const Post = ({
 
       <Styled.PostStats>
         <p className='title'>
-          {title} {shortUrl ? <p>({shortUrl})</p> : null}
+          {title} {shortUrl ? <span>({shortUrl})</span> : null}
         </p>
         <div className='authorInfo'>
           <p>
@@ -139,10 +140,11 @@ const Post = ({
             </p>
           ) : null}
           {reff === 'hiddenPage' ? null : (
-            <button onClick={handleHide}>
+            <StyledButton onClick={handleHide}>
               {hiding ? 'hidding...' : 'hide'}
-            </button>
-          )}{' '} |
+            </StyledButton>
+          )}{' '}
+          |
           <Link href={`/post/${postId}`}>
             {numberOfComments > 0 ? `${numberOfComments} comments` : 'discuss'}
           </Link>

@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import Router from 'next/router';
 import React, { useState } from 'react';
 import { v4 as uuid } from 'uuid';
@@ -137,7 +138,7 @@ const Submit = ({ users }: { users: UserProps[] }) => {
             {submitting ? 'Submitting...' : 'Submit'}
           </Styled.SubmitButton>
 
-          <p>
+          <p style={{ paddingBottom: '1rem' }}>
             Leave link blank to submit a question for discussion. If there is no
             link, post will appear at the top of the ask. If there is a link,
             text is optional.

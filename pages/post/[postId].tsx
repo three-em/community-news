@@ -10,6 +10,7 @@ import { useGettUser } from '../../hooks/useGetUser';
 import { Reply } from '../../types/index';
 import Comment from '../../components/Comment';
 import * as Styled from '../../styles/postView';
+import { Button } from '../../styles/common';
 
 interface DataProps {
   functionRole: string;
@@ -116,11 +117,10 @@ const ViewPost = ({ posts }: { posts: PostProps[] }) => {
       {post ? (
         <Styled.Wrapper>
           <Styled.PostInfo>
-            <ThumbsupIcon size={12} />
             <div>
               <Styled.PostTitle>
                 {post.title}{' '}
-                {post.url ? <p>({getShortUrl(post.url)})</p> : null}
+                {post.url ? <span>({getShortUrl(post.url)})</span> : null}
               </Styled.PostTitle>
               <Styled.PostAuthor>
                 posted by {post.author.userName} {getPostDate(post.timeCreated)}{' '}
@@ -128,16 +128,18 @@ const ViewPost = ({ posts }: { posts: PostProps[] }) => {
                 {post.comments.length
                   ? ` ${post.comments.length} comments`
                   : ' No Comments'}{' '}
-                |{' '}
-                <button onClick={handleFavorite}>
+                |
+                <Button onClick={handleFavorite}>
                   {addingFav ? 'adding..' : 'add favorite'}
-                </button>
+                </Button>
               </Styled.PostAuthor>
             </div>
           </Styled.PostInfo>
 
           <>
-            <p>{post.description ? post.description : null}</p>
+            <Styled.Description>
+              {post.description ? post.description : null}
+            </Styled.Description>
             <Styled.TextArea
               name='comment'
               id='comment'
@@ -163,9 +165,9 @@ const ViewPost = ({ posts }: { posts: PostProps[] }) => {
       )}
 
       {post && post.comments.length > 0 ? (
-        <>
+        <Styled.Wrapper>
           {post.comments.map((comment) => (
-            <>
+            <div>
               <div>
                 <Comment
                   id={comment.id}
@@ -181,9 +183,7 @@ const ViewPost = ({ posts }: { posts: PostProps[] }) => {
                 return (
                   <div
                     style={{
-                      marginLeft: '3rem',
-                      background: 'aliceblue',
-                      padding: '0.8rem',
+                      marginLeft: '3.5rem',
                       marginBottom: '1rem',
                     }}
                   >
@@ -200,9 +200,9 @@ const ViewPost = ({ posts }: { posts: PostProps[] }) => {
                   </div>
                 );
               })}
-            </>
+            </div>
           ))}
-        </>
+        </Styled.Wrapper>
       ) : null}
     </>
   );

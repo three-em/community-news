@@ -3,6 +3,16 @@ import { useRouter } from 'next/router';
 import Post from '../../../../components/Post';
 import { useGetAllData } from '../../../../hooks/useGetAllData';
 import { useGettUser } from '../../../../hooks/useGetUser';
+import styled from 'styled-components';
+
+const Wrapper = styled.main`
+  background: #f6f6ef;
+  margin: auto;
+
+  @media (min-width: 1100px) {
+    width: 80%;
+  }
+`;
 
 const UpvotedPosts = () => {
   const { username: queryingUser } = useRouter().query,
@@ -17,9 +27,13 @@ const UpvotedPosts = () => {
       ? posts && posts.filter((post) => !userUpvotes?.includes(post.postID))
       : [];
 
-  if (!userUpvotes) return <p>Loading...</p>;
+  if (!userUpvotes)
+    <Wrapper>
+      return <p>Loading...</p>
+    </Wrapper>;
+
   return (
-    <main>
+    <Wrapper>
       {queryingUser === userName ? (
         <>
           {upvotedPosts && upvotedPosts.length > 0 ? (
@@ -46,7 +60,7 @@ const UpvotedPosts = () => {
       ) : (
         <p>Can&apos;t display this</p>
       )}
-    </main>
+    </Wrapper>
   );
 };
 
@@ -60,7 +74,7 @@ const HiddenPosts = () => {
     userHidden = posts && posts.filter((post) => hidden?.includes(post.postID));
 
   return (
-    <main>
+    <Wrapper>
       {queryingUser === userName ? (
         <>
           {hidden && hidden.length > 0 ? (
@@ -88,7 +102,7 @@ const HiddenPosts = () => {
       ) : (
         <p>Can&apos;t display this</p>
       )}
-    </main>
+    </Wrapper>
   );
 };
 
@@ -99,9 +113,14 @@ const Submissions = () => {
     submittedPosts =
       posts && posts.filter((post) => post.author.userName === username);
 
-  if (!submittedPosts) return <p>Loading...</p>;
+  if (!submittedPosts)
+    return (
+      <Wrapper>
+        <p>Loading...</p>
+      </Wrapper>
+    );
   return (
-    <main>
+    <Wrapper>
       {submittedPosts && submittedPosts.length > 0 ? (
         <>
           {submittedPosts &&
@@ -120,9 +139,9 @@ const Submissions = () => {
             ))}
         </>
       ) : (
-        <p>{username} hasn&apos;t added any favorite submissions yet</p>
+        <p>{username} hasn&apos;t added made any submissions yet</p>
       )}
-    </main>
+    </Wrapper>
   );
 };
 
@@ -135,10 +154,15 @@ const Favorites = () => {
     userFavorites =
       posts && posts.filter((post) => favorites?.includes(post.postID));
 
-  if (!favorites) return <p>Loading...</p>;
+  if (!favorites)
+    return (
+      <Wrapper>
+        <p>Loading...</p>
+      </Wrapper>
+    );
 
   return (
-    <main>
+    <Wrapper>
       {favorites?.length > 0 ? (
         <>
           {userFavorites &&
@@ -159,7 +183,7 @@ const Favorites = () => {
       ) : (
         <p>{userName} hasn&apos;t added any favorite submissions yet.</p>
       )}
-    </main>
+    </Wrapper>
   );
 };
 

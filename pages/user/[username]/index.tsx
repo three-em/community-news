@@ -3,6 +3,15 @@ import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useGettUser } from '../../../hooks/useGetUser';
 import { useGetAllData } from '../../../hooks/useGetAllData';
+import { Wrapper } from '../../../styles/common';
+import styled from 'styled-components';
+
+const CustomWrapper = styled(Wrapper)`
+  padding: 1rem;
+  p {
+    font-size: 1.08rem;
+  }
+`;
 
 const UserProfile = () => {
   const router = useRouter(),
@@ -38,10 +47,15 @@ const UserProfile = () => {
     }
   };
 
-  if (!user) return <p>Loading</p>;
+  if (!user)
+    return (
+      <Wrapper>
+        <p>Loading</p>
+      </Wrapper>
+    );
 
   return (
-    <>
+    <CustomWrapper>
       {queriedUser === userName ? (
         <>
           <p>
@@ -64,18 +78,33 @@ const UserProfile = () => {
                 rows={10}
                 value={bio}
                 onChange={handleChange}
+                style={{ outline: 'none', display: 'block' }}
               ></textarea>
             </span>
           </p>
 
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <a href={`/user/${userName}/submissions`}>submissions</a>
-            <a href={`/user/${userName}/hidden`}>hidden</a>
-            <a href={`/user/${userName}/upvoted`}>upvoted submissions</a>
-            <a href={`/user/${userName}/favorites`}>favorite submissions</a>
+          <div
+            style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
+          >
+            <a style={{ color: 'blue' }} href={`/user/${userName}/submissions`}>
+              submissions
+            </a>
+            <a style={{ color: 'blue' }} href={`/user/${userName}/hidden`}>
+              hidden
+            </a>
+            <a style={{ color: 'blue' }} href={`/user/${userName}/upvoted`}>
+              upvoted submissions
+            </a>
+            <a style={{ color: 'blue' }} href={`/user/${userName}/favorites`}>
+              favorite submissions
+            </a>
           </div>
 
-          <button disabled={!bio || bio === user.bio} onClick={submitBioUpdate}>
+          <button
+            style={{ marginTop: '1rem' }}
+            disabled={!bio || bio === user.bio}
+            onClick={submitBioUpdate}
+          >
             {updating ? 'updating...' : 'update'}
           </button>
         </>
@@ -100,7 +129,7 @@ const UserProfile = () => {
           </div>
         </>
       )}
-    </>
+    </CustomWrapper>
   );
 };
 

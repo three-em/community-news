@@ -3,6 +3,16 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useGetAllData } from '../hooks/useGetAllData';
 import Post from '../components/Post';
+import styled from 'styled-components';
+
+const Wrapper = styled.main`
+  background: #f6f6ef;
+  margin: auto;
+
+  @media (min-width: 1100px) {
+    width: 80%;
+  }
+`;
 
 const NewPosts = () => {
   const { posts, loading } = useGetAllData();
@@ -12,10 +22,15 @@ const NewPosts = () => {
     (post) => currentTime - post.timeCreated <= 86400000
   );
 
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return (
+      <Wrapper>
+        <p>Loading...</p>
+      </Wrapper>
+    );
 
   return (
-    <main>
+    <Wrapper>
       {newPosts.length > 0 ? (
         newPosts.map((post) => (
           <Post
@@ -33,7 +48,7 @@ const NewPosts = () => {
       ) : (
         <p>no new posts yet. check back later</p>
       )}
-    </main>
+    </Wrapper>
   );
 };
 
@@ -45,10 +60,15 @@ const PastPosts = () => {
     (post) => currentTime - post.timeCreated >= 86400000
   );
 
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return (
+      <Wrapper>
+        <p>Loading...</p>
+      </Wrapper>
+    );
 
   return (
-    <main>
+    <Wrapper>
       {pastPosts.length > 0 ? (
         pastPosts.map((post) => (
           <Post
@@ -66,7 +86,7 @@ const PastPosts = () => {
       ) : (
         <p>no past posts yet. check back later</p>
       )}
-    </main>
+    </Wrapper>
   );
 };
 
@@ -75,10 +95,15 @@ const Threads = () => {
 
   const commentedPosts = posts.filter((post) => post.comments.length > 0);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return (
+      <Wrapper>
+        <p>Loading...</p>
+      </Wrapper>
+    );
 
   return (
-    <main>
+    <Wrapper>
       {commentedPosts.length > 0 ? (
         commentedPosts.map((post) => (
           <Post
@@ -98,7 +123,7 @@ const Threads = () => {
           be the first to comment on <Link href='/'>new posts</Link>
         </p>
       )}
-    </main>
+    </Wrapper>
   );
 };
 
@@ -107,10 +132,15 @@ const Ask = () => {
 
   const askedPosts = posts.filter((post) => !post.url);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return (
+      <Wrapper>
+        <p>Loading...</p>
+      </Wrapper>
+    );
 
   return (
-    <main>
+    <Wrapper>
       {askedPosts.length > 0 ? (
         askedPosts.map((post) => (
           <Post
@@ -131,7 +161,7 @@ const Ask = () => {
           appear on this page. <Link href='/submit'>Submit Post</Link>
         </p>
       )}
-    </main>
+    </Wrapper>
   );
 };
 

@@ -3,10 +3,12 @@ import styled from 'styled-components';
 const Wrapper = styled.div`
   display: flex;
   background-color: #f6f6ef;
+  background-color: #f4f1de;
+
   flex-direction: column;
 
   @media (min-width: 1100px) {
-    width: 81%;
+    width: 80%;
     margin: auto;
   }
 `;
@@ -14,7 +16,8 @@ const Wrapper = styled.div`
 const PostInfo = styled.div`
   gap: 0.5rem;
   display: flex;
-  padding: 0.5rem;
+  padding-top: 0.5rem;
+  padding-left: 1rem;
   align-items: baseline;
 `;
 
@@ -31,10 +34,17 @@ const PostAuthor = styled.p`
   font-size: 12px;
 `;
 
+const Description = styled.p`
+  margin-left: 1rem;
+  font-size: 1.15rem;
+  margin-right: 1rem;
+`;
+
 const TextArea = styled.textarea`
   margin: 1.2rem;
   width: 85%;
   border-radius: 5px;
+  outline: none;
 
   @media (min-width: 550px) {
     width: 450px;
@@ -47,6 +57,15 @@ const SubmitButton = styled.button`
   padding: 0.4rem;
   border: 1px solid gray;
   border-radius: 5px;
+  font-family: monospace;
 `;
 
-export { Wrapper, PostInfo, PostTitle, PostAuthor, TextArea, SubmitButton };
+export {
+  Wrapper,
+  PostInfo,
+  PostTitle,
+  PostAuthor,
+  Description,
+  TextArea,
+  SubmitButton,
+};

@@ -29,6 +29,7 @@ const FormItem = styled.div`
     border: 1px solid gray;
     border-radius: 5px;
     padding: 0.2rem;
+    font-family: 'Courier New', Courier, monospace;
   }
 
   textarea {
@@ -63,6 +64,8 @@ const SubmitButton = styled.button`
   width: 100px;
   border: 1px solid gray;
   border-radius: 5px;
+  font-weight: 600;
+  font-family: 'Courier New', Courier, monospace;
 `;
 
 export { Container, FormItem, SubmitButton };

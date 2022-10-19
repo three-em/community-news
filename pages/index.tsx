@@ -33,7 +33,12 @@ const Home = () => {
     })();
   }, [currentUser]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return (
+      <Styled.Container style={{ background: '#fff' }}>
+        <p style={{ fontSize: '1rem' }}>Loading...</p>
+      </Styled.Container>
+    );
 
   return (
     <Styled.Container>
@@ -41,10 +46,6 @@ const Home = () => {
         <title>Community News</title>
         <meta name='description' content='EXM Data Indexing Application' />
         <link rel='icon' href='/favicon.ico' />
-        <link
-          href='https://fonts.googleapis.com/css2?family=Monoton&family=Poppins:wght@600&display=swap'
-          rel='stylesheet'
-        />
       </Head>
 
       <main>
@@ -63,10 +64,10 @@ const Home = () => {
             />
           ))
         ) : (
-          <>
+          <Styled.NoPosts>
             <p>No posts yet</p>
             <Link href='/submit'>Submit Post</Link>
-          </>
+          </Styled.NoPosts>
         )}
       </main>
     </Styled.Container>

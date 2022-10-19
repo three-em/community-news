@@ -1,9 +1,11 @@
 import React from 'react';
 import Router from 'next/router';
-import { useGettUser } from '../hooks/useGetUser';
-import { getPostDate } from '../utils/helpers';
-import { useGetAllData } from '../hooks/useGetAllData';
-import { UserProps } from '../types';
+import { useGettUser } from '../../hooks/useGetUser';
+import { getPostDate } from '../../utils/helpers';
+import { useGetAllData } from '../../hooks/useGetAllData';
+import { UserProps } from '../../types';
+import { Button as StyledButton } from '../../styles/common';
+import * as Styled from './styles';
 
 interface Props {
   type?: 'comment' | 'reply';
@@ -51,15 +53,31 @@ const Comment = ({
   };
 
   return (
-    <div key={id} style={{ background: 'whitesmoke', margin: '1rem' }}>
-      <div>
-        replied by {author} {getPostDate(timePosted)} ago |{' '}
+    <Styled.Wrapper key={id}>
+      <div style={{ fontSize: '0.9rem', fontStyle: 'italic' }}>
+        replied by{' '}
+        <a
+          href={`/user/${author}`}
+          style={{ color: 'green', cursor: 'pointer' }}
+        >
+          {author}
+        </a>{' '}
+        {getPostDate(timePosted)} ago |
         {type === 'reply' ? (
-          <>replying to @{parentAuthor} | &#x2198; thread |</>
+          <>
+            replying to{' '}
+            <a
+              href={`/user/${parentAuthor}`}
+              style={{ color: 'green', cursor: 'pointer' }}
+            >
+              @{parentAuthor}
+            </a>{' '}
+            | &#x2198; thread |
+          </>
         ) : null}
         {currentUser.userName === author ? (
           <>
-            <button
+            <StyledButton
               onClick={() => {
                 Router.push(
                   {
@@ -76,13 +94,13 @@ const Comment = ({
               }}
             >
               edit
-            </button>{' '}
-            |{' '}
-            <button
+            </StyledButton>
+            |
+            <StyledButton
               onClick={() => {
                 Router.push(
                   {
-                    pathname: '/edit',
+                    pathname: '/delete',
                     query: {
                       id,
                       text,
@@ -90,17 +108,17 @@ const Comment = ({
                       postID,
                     },
                   },
-                  `/edit/${postID}`
+                  `/delete/${postID}`
                 );
               }}
             >
               delete
-            </button>
+            </StyledButton>
           </>
         ) : null}
       </div>
-      <p>{text}</p>
-      <button
+      <Styled.CommentText>{text}</Styled.CommentText>
+      <StyledButton
         onClick={() => {
           currentUser.userName && currentUser.walletAddress
             ? Router.push(
@@ -124,8 +142,8 @@ const Comment = ({
         {currentUser.userName && currentUser.walletAddress
           ? 'reply'
           : 'connect wallet to reply'}
-      </button>
-    </div>
+      </StyledButton>
+    </Styled.Wrapper>
   );
 };
 

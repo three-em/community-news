@@ -209,6 +209,3 @@ assert(createComment.state.posts, [testData.createPost.input, testData.createCom
 assert(createReply.state.posts, [testData.createPost.input, testData.createComment.input, testData.createReply.input])
 assert(editComment.state.posts, [testData.createPost.input, testData.createComment.input, testData.editComment.input])
 assert(deleteComment.state.posts, [testData.createPost.input, testData.createComment.input, testData.deleteComment.input])
-
-console.log('FAVS', addFavorite.state.users);
-console.log('HIDDEN', hidePost.state.users);

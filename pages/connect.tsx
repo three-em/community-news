@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { UserProps } from '../types';
 import { useGettUser } from '../hooks/useGetUser';
 import { fetchData } from '../utils/getData';
+import { Wrapper } from '../styles/common';
 
 export async function getServerSideProps() {
   const { users } = await fetchData();
@@ -99,14 +100,18 @@ const Connect = ({ users }: { users: UserProps[] }) => {
   };
 
   if (currentUser.userName && currentUser.walletAddress)
-    return <p>redirecting....</p>;
+    return (
+      <Wrapper>
+        <p>redirecting....</p>
+      </Wrapper>
+    );
 
   return (
-    <>
+    <Wrapper>
       {userName.length === 0 ? null : <p>{formValidation()}</p>}
 
-      <form action='' onSubmit={handleSubmit}>
-        <label>
+      <form action='' onSubmit={handleSubmit} style={{ padding: '1rem' }}>
+        <label style={{ fontSize: '1.15rem' }}>
           username:
           <input
             value={userName}
@@ -123,11 +128,14 @@ const Connect = ({ users }: { users: UserProps[] }) => {
           />
         </label>
 
-        <button disabled={validateUsername()}>
+        <button
+          disabled={validateUsername()}
+          style={{ display: 'block', marginTop: '1rem' }}
+        >
           {connecting ? 'Connecting...' : 'Connect'}
         </button>
       </form>
-    </>
+    </Wrapper>
   );
 };
 
