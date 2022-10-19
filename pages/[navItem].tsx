@@ -70,7 +70,7 @@ const PastPosts = () => {
   );
 };
 
-const Comments = () => {
+const Threads = () => {
   const { posts, loading } = useGetAllData();
 
   const commentedPosts = posts.filter((post) => post.comments.length > 0);
@@ -140,7 +140,7 @@ const NavItemsView = () => {
   const { navItem } = router.query;
   if (navItem === 'new') return <NewPosts />;
   if (navItem === 'past') return <PastPosts />;
-  if (navItem === 'comments') return <Comments />;
+  if (navItem === 'threads') return <Threads />;
   if (navItem === 'ask') return <Ask />;
 };
 

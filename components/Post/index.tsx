@@ -1,13 +1,14 @@
 import Link from 'next/link';
+import Router from 'next/router';
 import { UserProps } from '../../types';
 import { useEffect, useState } from 'react';
-import { fetchData } from '../../utils/getData';
 import { useGettUser } from '../../hooks/useGetUser';
 import { ThumbsupIcon, NorthStarIcon } from '@primer/octicons-react';
 import * as Styled from './styles';
 import * as utils from '../../utils/helpers';
 
 interface PostComponentProps {
+  reff?: string;
   users?: UserProps[];
   num: number;
   title: string;
@@ -19,18 +20,8 @@ interface PostComponentProps {
   numberOfComments: number;
 }
 
-export async function getServerSideProps() {
-  const { users } = await fetchData();
-
-  return {
-    props: {
-      users,
-    },
-  };
-}
-
 const Post = ({
-  users,
+  reff,
   num,
   title,
   url,
@@ -40,26 +31,45 @@ const Post = ({
   timeCreated,
   numberOfComments,
 }: PostComponentProps) => {
-  const [showThumbsup, setShowThumbsup] = useState(false),
-    shortUrl = utils.getShortUrl(url),
+  const [showThumbsup, setShowThumbsup] = useState(undefined),
+    [hiding, setHiding] = useState(false),
+    shortUrl = url === '' ? '' : utils.getShortUrl(url),
     timeSincePost = utils.getPostDate(timeCreated),
     { userName } = useGettUser().currentUser;
 
+  let [numberOfUpvotes, setNumberOfUpvotes] = useState(upvotes);
+
   useEffect(() => {
-    if (users) {
-      const userUpvotes = users
-        .map((user) => {
-          if (user.userName === userName) {
-            return user.upvotedPosts;
-          }
-        })
-        .flat();
-      const doesUpvoteExist = userUpvotes.some((upvote) => upvote === postId);
-      setShowThumbsup(doesUpvoteExist);
-    }
-  }, [postId, users, userName]);
+    (async () => {
+      const response = await fetch('/api/read', {
+        method: 'GET',
+        headers: {
+          Accepts: 'application/json',
+        },
+      });
+      const data = await response.json();
+      const { users } = data.data;
+
+      if (users.length > 0) {
+        const userUpvotes = users
+          .map((user) => {
+            if (user.userName === userName && user.upvotedPosts.length > 0) {
+              return user.upvotedPosts;
+            }
+            return [];
+          })
+          .flat();
+
+        setShowThumbsup(() => userUpvotes.includes(postId));
+      }
+    })();
+  }, [postId, userName]);
 
   const handlevote = async (action: 'upVote' | 'downVote') => {
+    setShowThumbsup(() => (action === 'upVote' ? true : false));
+    setNumberOfUpvotes(() =>
+      action === 'upVote' ? (numberOfUpvotes += 1) : (numberOfUpvotes -= 1)
+    );
     await fetch('/api/write-exm', {
       method: 'POST',
       body: JSON.stringify({
@@ -69,17 +79,29 @@ const Post = ({
           userName,
         },
       }),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
     });
+  };
+
+  const handleHide = async () => {
+    setHiding(true);
+    await fetch('/api/write-exm', {
+      method: 'POST',
+      body: JSON.stringify({
+        data: {
+          functionRole: 'hidePost',
+          userName,
+          postID: postId,
+        },
+      }),
+    });
+    Router.push(`/user/${userName}/hidden`);
+    setHiding(false);
   };
 
   return (
     <Styled.PostWrapper>
       <Styled.PostInfo>
-        <p>{num}.</p>
-
+        <p>{num}.&#41;</p>
         {userName === userPosted ? (
           <NorthStarIcon size={10} />
         ) : (
@@ -88,7 +110,6 @@ const Post = ({
               <div
                 onClick={() => {
                   handlevote('upVote');
-                  setShowThumbsup(false);
                 }}
               >
                 <ThumbsupIcon size={12} />
@@ -100,25 +121,28 @@ const Post = ({
 
       <Styled.PostStats>
         <p className='title'>
-          {title} ({shortUrl})
+          {title} {shortUrl ? <p>({shortUrl})</p> : null}
         </p>
         <div className='authorInfo'>
           <p>
-            {upvotes} upvotes | posted by{' '}
+            {numberOfUpvotes} upvotes | posted by{' '}
             <a href={`/user/${userPosted}`}>{userPosted}</a> {timeSincePost} ago
             |
           </p>
           {showThumbsup ? (
             <p
               onClick={() => {
-                setShowThumbsup(false);
                 handlevote('downVote');
               }}
             >
               unvote |
             </p>
           ) : null}
-          <p>hide |</p>
+          {reff === 'hiddenPage' ? null : (
+            <button onClick={handleHide}>
+              {hiding ? 'hidding...' : 'hide'}
+            </button>
+          )}{' '} |
           <Link href={`/post/${postId}`}>
             {numberOfComments > 0 ? `${numberOfComments} comments` : 'discuss'}
           </Link>

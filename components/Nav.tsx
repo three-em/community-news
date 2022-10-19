@@ -16,7 +16,7 @@ interface ContainerProps {
 enum NavItemsProps {
   NEW = 'new',
   PAST = 'past',
-  COMMENTS = 'comments',
+  COMMENTS = 'threads',
   ASK = 'ask',
   SUBMIT = 'submit',
 }
@@ -41,9 +41,10 @@ const NavContainer = styled.div<ContainerProps>`
 
   > a {
     color: #fff;
-    font-size: 1.05rem;
+    font-size: 1.2rem;
     font-weight: 800;
     text-decoration: none;
+    font-family: Monoton, Courier;
   }
 `;
 

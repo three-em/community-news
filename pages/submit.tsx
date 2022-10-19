@@ -35,6 +35,7 @@ const Submit = ({ users }: { users: UserProps[] }) => {
 
   const handleSubmit = async (event: React.SyntheticEvent) => {
     try {
+      const urlLink = isValidUrl(formData.url) ? new URL(formData.url) : '';
       event?.preventDefault();
       if (userName && walletAddress) {
         setSubmitting(true);
@@ -49,7 +50,7 @@ const Submit = ({ users }: { users: UserProps[] }) => {
               },
               timeCreated: new Date().getTime(),
               title: formData.title,
-              url: new URL(formData.url),
+              url: urlLink,
               description: formData.description,
               upvotes: 0,
               comments: [],
@@ -132,9 +133,7 @@ const Submit = ({ users }: { users: UserProps[] }) => {
               }}
             />
           </Styled.FormItem>
-          <Styled.SubmitButton
-            disabled={!isValidUrl(formData.url) || !formData.title}
-          >
+          <Styled.SubmitButton disabled={!formData.title}>
             {submitting ? 'Submitting...' : 'Submit'}
           </Styled.SubmitButton>
 

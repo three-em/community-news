@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import moment from 'moment';
 import { useRouter } from 'next/router';
-import { useGettUser } from '../../hooks/useGetUser';
-import { useGetAllData } from '../../hooks/useGetAllData';
+import { useGettUser } from '../../../hooks/useGetUser';
+import { useGetAllData } from '../../../hooks/useGetAllData';
 
 const UserProfile = () => {
   const router = useRouter(),
     { username: queriedUser } = router.query,
     [bio, setBio] = useState(''),
+    [updating, setUpdating] = useState(false),
     { userName } = useGettUser().currentUser,
     { users } = useGetAllData();
 
@@ -19,6 +20,7 @@ const UserProfile = () => {
 
   const submitBioUpdate = async () => {
     try {
+      setUpdating(true);
       await fetch('/api/write-exm', {
         method: 'POST',
         body: JSON.stringify({
@@ -29,6 +31,8 @@ const UserProfile = () => {
           },
         }),
       });
+      setUpdating(false);
+      setBio('');
     } catch (error) {
       console.error(error);
     }
@@ -49,6 +53,7 @@ const UserProfile = () => {
             <span>{moment(user.creationDate).format('MMMM, DD, YYYY')}</span>
           </p>
 
+          <p>current bio: {user.bio ? user.bio : 'no bio yet'}</p>
           <p>
             about:{' '}
             <span>
@@ -57,21 +62,21 @@ const UserProfile = () => {
                 id=''
                 cols={30}
                 rows={10}
-                value={user.bio}
+                value={bio}
                 onChange={handleChange}
               ></textarea>
             </span>
           </p>
 
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <a href={`/submissions/${userName}`}>submissions</a>
-            <a href='/hidden'>hidden</a>
-            <a href={`/upvoted/${userName}`}>upvoted submissions</a>
-            <a href={`/favorites/${userName}`}>favorite submissions</a>
+            <a href={`/user/${userName}/submissions`}>submissions</a>
+            <a href={`/user/${userName}/hidden`}>hidden</a>
+            <a href={`/user/${userName}/upvoted`}>upvoted submissions</a>
+            <a href={`/user/${userName}/favorites`}>favorite submissions</a>
           </div>
 
           <button disabled={!bio || bio === user.bio} onClick={submitBioUpdate}>
-            update
+            {updating ? 'updating...' : 'update'}
           </button>
         </>
       ) : (
@@ -90,8 +95,8 @@ const UserProfile = () => {
           </p>
 
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <a href={`/submissions/${queriedUser}`}>submissions</a>
-            <a href={`/favorites/${queriedUser}`}>favorites</a>
+            <a href={`/user/${queriedUser}/submissions`}>submissions</a>
+            <a href={`/user/${queriedUser}/favorites`}>favorites</a>
           </div>
         </>
       )}

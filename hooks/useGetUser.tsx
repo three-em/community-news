@@ -7,6 +7,7 @@ const useGettUser = () => {
     walletAddress: '',
     favorites: [],
     upvotedPosts: [],
+    hidden: [],
     bio: '',
     creationDate: new Date(),
   };

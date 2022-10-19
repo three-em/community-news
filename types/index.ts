@@ -3,7 +3,14 @@ export interface Comment {
   text: string;
   author: string;
   timePosted: number;
-  comments: Array<Comment>;
+  replies: Array<Reply>;
+}
+export interface Reply {
+  parentCommentAuthor: string;
+  id: string;
+  text: string;
+  author: string;
+  timePosted: number;
 }
 export interface PostProps {
   postID: string;
@@ -23,6 +30,7 @@ export interface UserProps {
   walletAddress: string;
   upvotedPosts: string[];
   favorites: string[];
+  hidden: string[];
   bio: string;
   creationDate: Date;
 }

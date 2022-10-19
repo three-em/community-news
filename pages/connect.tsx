@@ -76,6 +76,7 @@ const Connect = ({ users }: { users: UserProps[] }) => {
               userName: userName.toLowerCase(),
               upvotedPosts: [],
               favorites: [],
+              hidden: [],
               bio: '',
               creationData: new Date(),
             },

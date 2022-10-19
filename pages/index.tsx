@@ -3,33 +3,37 @@ import Head from 'next/head';
 import Post from '../components/Post';
 import { PostProps } from '../types';
 import * as Styled from '../styles/home';
-import { fetchData } from '../utils/getData';
 import { useEffect, useState } from 'react';
-import { useGetAllData } from '../hooks/useGetAllData';
+import { useGettUser } from '../hooks/useGetUser';
 
-export async function getServerSideProps() {
-  const { posts } = await fetchData();
-
-  return {
-    props: {
-      posts,
-    },
-  };
-}
-
-const Home = ({ posts }: { posts: PostProps[] }) => {
-  const [allPosts, setAllPosts] = useState(posts);
+const Home = () => {
+  const [allPosts, setAllPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const { currentUser } = useGettUser();
 
   useEffect(() => {
     (async () => {
+      setLoading(true);
       const response = await fetch('/api/read', {
         method: 'GET',
       });
       const all = await response.json();
-      const { posts } = all.data;
-      setAllPosts(posts);
+      const { posts, users } = all.data;
+
+      const user =
+        users &&
+        currentUser.userName &&
+        users.find((user) => user.userName === currentUser.userName);
+
+      const filteredPosts = posts.filter(
+        (post) => user && !user.hidden.includes(post.postID)
+      );
+      setAllPosts(filteredPosts);
+      setLoading(false);
     })();
-  }, []);
+  }, [currentUser]);
+
+  if (loading) return <p>Loading...</p>;
 
   return (
     <Styled.Container>
@@ -37,6 +41,10 @@ const Home = ({ posts }: { posts: PostProps[] }) => {
         <title>Community News</title>
         <meta name='description' content='EXM Data Indexing Application' />
         <link rel='icon' href='/favicon.ico' />
+        <link
+          href='https://fonts.googleapis.com/css2?family=Monoton&family=Poppins:wght@600&display=swap'
+          rel='stylesheet'
+        />
       </Head>
 
       <main>

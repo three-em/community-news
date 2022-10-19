@@ -1,29 +1,38 @@
+import Router from 'next/router';
 import React, { useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import { useRouter } from 'next/router';
-import Router from 'next/router';
 import { getPostDate } from '../../utils/helpers';
+import { useGettUser } from '../../hooks/useGetUser';
 
 const Reply = () => {
   const router = useRouter();
+  const { currentUser } = useGettUser();
   const { query } = router;
   const [reply, setReply] = useState('');
   const [replying, setReplying] = useState(false);
 
-  const { commentID, username, commentText, timePosted, postTitle, postID } =
-    query;
+  const {
+    commentID,
+    username,
+    commentText,
+    timePosted,
+    postTitle,
+    postID,
+    parentAuthor,
+  } = query;
 
   const handleReply = async () => {
     const data = {
       functionRole: 'createReply',
       postID,
       commentID,
-      comment: {
+      reply: {
+        parentCommentAuthor: parentAuthor,
         id: uuid(),
         text: reply,
         author: username,
         timePosted: new Date().getTime(),
-        comments: [],
       },
     };
     try {
@@ -43,25 +52,27 @@ const Reply = () => {
 
   return (
     <>
-      <p>
-        {username} {getPostDate(Number(timePosted))} ago | on: {postTitle}{' '}
-      </p>
-      <p>{commentText}</p>
+      <>
+        <p>
+          {parentAuthor} {getPostDate(Number(timePosted))} ago | on: {postTitle}{' '}
+        </p>
+        <p>{commentText}</p>
 
-      <textarea
-        name='reply'
-        id='reply'
-        cols={30}
-        rows={10}
-        value={reply}
-        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-          setReply(e.target.value);
-        }}
-      ></textarea>
+        <textarea
+          name='reply'
+          id='reply'
+          cols={30}
+          rows={10}
+          value={reply}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+            setReply(e.target.value);
+          }}
+        ></textarea>
 
-      <button onClick={handleReply} disabled={!reply}>
-        {replying ? 'replying...' : 'reply'}
-      </button>
+        <button onClick={handleReply} disabled={!reply}>
+          {replying ? 'replying...' : 'reply'}
+        </button>
+      </>
     </>
   );
 };
