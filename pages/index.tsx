@@ -53,7 +53,7 @@ const Home = () => {
       </Head>
 
       <main>
-        {/* {allPosts && allPosts.length > 0 ? (
+        {allPosts && allPosts.length > 0 ? (
           allPosts.map((post: PostProps) => (
             <Post
               key={post.postID}
@@ -72,7 +72,7 @@ const Home = () => {
             <p>No posts yet</p>
             <Link href='/submit'>Submit Post</Link>
           </Styled.NoPosts>
-        )} */}
+        )}
         <p>Issue is here</p>
       </main>
     </Styled.Container>
