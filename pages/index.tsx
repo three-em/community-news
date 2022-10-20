@@ -53,7 +53,7 @@ const Home = () => {
       </Head>
 
       <main>
-        {allPosts && allPosts.length > 0 ? (
+        {allPosts ? (
           allPosts.map((post: PostProps) => (
             <Post
               key={post.postID}
