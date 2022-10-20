@@ -32,9 +32,10 @@ const Home = () => {
       setAllPosts(() => [...allPosts, ...posts]);
       setLoading(false);
     })();
-  }, [currentUser]);
+  }, []);
 
   console.log('ALL', allPosts);
+  console.log('LEN', allPosts.length);
 
   if (loading)
     return (
@@ -52,7 +53,7 @@ const Home = () => {
       </Head>
 
       <main>
-        {allPosts && allPosts.length > 0 ? (
+        {/* {allPosts && allPosts.length > 0 ? (
           allPosts.map((post: PostProps) => (
             <Post
               key={post.postID}
@@ -71,7 +72,8 @@ const Home = () => {
             <p>No posts yet</p>
             <Link href='/submit'>Submit Post</Link>
           </Styled.NoPosts>
-        )}
+        )} */}
+        <p>Issue is here</p>
       </main>
     </Styled.Container>
   );
