@@ -25,14 +25,16 @@ const Home = () => {
         currentUser.userName &&
         users.find((user) => user.userName === currentUser.userName);
 
-      const filteredPosts = posts.filter(
-        (post) =>
-          user && user.hidden.length > 0 && !user.hidden.includes(post.postID)
-      );
-      setAllPosts(filteredPosts);
+      // const filteredPosts = posts.filter(
+      //   (post) =>
+      //     user && user.hidden.length > 0 && !user.hidden.includes(post.postID)
+      // );
+      setAllPosts(() => [...allPosts, ...posts]);
       setLoading(false);
     })();
   }, [currentUser]);
+
+  console.log('ALL', allPosts);
 
   if (loading)
     return (
