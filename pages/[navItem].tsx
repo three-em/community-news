@@ -31,7 +31,7 @@ const NewPosts = () => {
 
   return (
     <Wrapper>
-      {newPosts.length > 0 ? (
+      {newPosts && newPosts.length > 0 ? (
         newPosts.map((post) => (
           <Post
             key={post.postID}
@@ -69,7 +69,7 @@ const PastPosts = () => {
 
   return (
     <Wrapper>
-      {pastPosts.length > 0 ? (
+      {pastPosts && pastPosts.length > 0 ? (
         pastPosts.map((post) => (
           <Post
             key={post.postID}
@@ -104,7 +104,7 @@ const Threads = () => {
 
   return (
     <Wrapper>
-      {commentedPosts.length > 0 ? (
+      {commentedPosts && commentedPosts.length > 0 ? (
         commentedPosts.map((post) => (
           <Post
             key={post.postID}
@@ -141,7 +141,7 @@ const Ask = () => {
 
   return (
     <Wrapper>
-      {askedPosts.length > 0 ? (
+      {askedPosts && askedPosts.length > 0 ? (
         askedPosts.map((post) => (
           <Post
             key={post.postID}

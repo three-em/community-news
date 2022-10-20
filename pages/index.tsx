@@ -26,7 +26,8 @@ const Home = () => {
         users.find((user) => user.userName === currentUser.userName);
 
       const filteredPosts = posts.filter(
-        (post) => user && !user.hidden.includes(post.postID)
+        (post) =>
+          user && user.hidden.length > 0 && !user.hidden.includes(post.postID)
       );
       setAllPosts(filteredPosts);
       setLoading(false);
