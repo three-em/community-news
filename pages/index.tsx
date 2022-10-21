@@ -54,6 +54,8 @@ const Home = () => {
       </Styled.Container>
     );
 
+  if (error) console.log('ERROR', error);
+
   const user =
     currentUser.userName &&
     data.users.find(
