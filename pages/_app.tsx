@@ -1,7 +1,8 @@
 import type { AppProps } from 'next/app';
-import Nav from '../components/Nav';
 import { ThemeProvider, DefaultTheme } from 'styled-components';
+import Nav from '../components/Nav';
 import GlobalStyle from '../components/globalstyles';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 const theme: DefaultTheme = {
   colors: {
@@ -10,14 +11,18 @@ const theme: DefaultTheme = {
   },
 };
 
+const queryClient = new QueryClient();
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
-      <ThemeProvider theme={theme}>
-        <Nav />
-        <GlobalStyle />
-        <Component {...pageProps} />
-      </ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={theme}>
+          <Nav />
+          <GlobalStyle />
+          <Component {...pageProps} />
+        </ThemeProvider>
+      </QueryClientProvider>
     </>
   );
 }
