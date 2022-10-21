@@ -6,10 +6,44 @@ import { PostProps, UserProps } from '../types';
 import { useGettUser } from '../hooks/useGetUser';
 import * as Styled from '../styles/home';
 
+const RenderPosts = ({ posts }: { posts: PostProps[] }) => (
+  <Styled.Container>
+    {posts.length > 0 ? (
+      posts.map((post: PostProps) => (
+        <Post
+          key={post.postID}
+          num={posts.indexOf(post) + 1}
+          title={post.title}
+          url={post.url}
+          postId={post.postID}
+          upvotes={post.upvotes}
+          userPosted={post.author.userName}
+          timeCreated={post.timeCreated}
+          numberOfComments={post.comments.length}
+        />
+      ))
+    ) : (
+      <Styled.NoPosts>
+        <p>No posts yet</p>
+        <Link href='/submit'>Submit Post</Link>
+      </Styled.NoPosts>
+    )}
+  </Styled.Container>
+);
+
 const Home = () => {
   const { currentUser } = useGettUser();
 
-  const { isLoading, error, data } = useQuery('getAllPosts', async () => {
+  const {
+    isLoading,
+    data,
+  }: {
+    isLoading: boolean;
+    data: {
+      posts: PostProps[];
+      users: UserProps[];
+    };
+  } = useQuery('getAllPosts', async () => {
     const fetchAll = await fetch('/api/read');
     const res = await fetchAll.json();
     return res.data;
@@ -21,6 +55,11 @@ const Home = () => {
         <p style={{ fontSize: '1rem' }}>Loading...</p>
       </Styled.Container>
     );
+
+  //Don't filter hidden posts if user is not connected
+  if (!currentUser.userName && !currentUser.walletAddress) {
+    return <RenderPosts posts={data.posts} />;
+  }
 
   const user =
     currentUser.userName &&
@@ -37,14 +76,6 @@ const Home = () => {
   console.log('FILTERED', filteredPosts);
   console.log('FILTERED LENGTH', filteredPosts.length);
 
-  // if (filteredPosts.length === 0)
-  //   return (
-  //     <Styled.NoPosts>
-  //       <p>No posts yet</p>
-  //       <Link href='/submit'>Submit Post</Link>
-  //     </Styled.NoPosts>
-  //   );
-
   return (
     <Styled.Container>
       <Head>
@@ -54,6 +85,12 @@ const Home = () => {
       </Head>
 
       <main>
+        {filteredPosts.length > 0 ? (
+          <RenderPosts posts={filteredPosts} />
+        ) : (
+          <RenderPosts posts={data.posts} />
+        )}
+
         {/* {filteredPosts.length > 0 ? (
           filteredPosts.map((post: PostProps) => (
             <Post
@@ -74,7 +111,7 @@ const Home = () => {
             <Link href='/submit'>Submit Post</Link>
           </Styled.NoPosts>
         )} */}
-        {data.posts.map((post: PostProps) => (
+        {/* {data.posts.map((post: PostProps) => (
           <Post
             key={post.postID}
             num={filteredPosts.indexOf(post) + 1}
@@ -86,7 +123,7 @@ const Home = () => {
             timeCreated={post.timeCreated}
             numberOfComments={post.comments.length}
           />
-        ))}
+        ))} */}
         <p>Issue is here</p>
       </main>
     </Styled.Container>
