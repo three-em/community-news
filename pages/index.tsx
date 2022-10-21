@@ -43,9 +43,9 @@ const Home = () => {
   //   })();
   // }, []);
 
-  // console.log('REACT QUERY', data);
-  // console.log('REACT QUERY LOADING', isLoading);
-  // console.log('REACT QUERY ERROR', error);
+  console.log('REACT QUERY', data);
+  console.log('REACT QUERY LOADING', isLoading);
+  console.log('REACT QUERY ERROR', error);
 
   if (isLoading)
     return (
@@ -53,8 +53,6 @@ const Home = () => {
         <p style={{ fontSize: '1rem' }}>Loading...</p>
       </Styled.Container>
     );
-
-  if (error) console.log('ERROR', error);
 
   const user =
     currentUser.userName &&
@@ -71,6 +69,14 @@ const Home = () => {
   console.log('FILTERED', filteredPosts);
   console.log('FILTERED LENGTH', filteredPosts.length);
 
+  if (filteredPosts.length === 0)
+    return (
+      <Styled.NoPosts>
+        <p>No posts yet</p>
+        <Link href='/submit'>Submit Post</Link>
+      </Styled.NoPosts>
+    );
+
   return (
     <Styled.Container>
       <Head>
@@ -80,7 +86,7 @@ const Home = () => {
       </Head>
 
       <main>
-        {filteredPosts.length > 0 ? (
+        {/* {filteredPosts.length > 0 ? (
           filteredPosts.map((post: PostProps) => (
             <Post
               key={post.postID}
@@ -99,7 +105,8 @@ const Home = () => {
             <p>No posts yet</p>
             <Link href='/submit'>Submit Post</Link>
           </Styled.NoPosts>
-        )}
+        )} */}
+        <p>Issue is here</p>
       </main>
     </Styled.Container>
   );
