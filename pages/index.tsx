@@ -69,13 +69,13 @@ const Home = () => {
   console.log('FILTERED', filteredPosts);
   console.log('FILTERED LENGTH', filteredPosts.length);
 
-  if (filteredPosts.length === 0)
-    return (
-      <Styled.NoPosts>
-        <p>No posts yet</p>
-        <Link href='/submit'>Submit Post</Link>
-      </Styled.NoPosts>
-    );
+  // if (filteredPosts.length === 0)
+  //   return (
+  //     <Styled.NoPosts>
+  //       <p>No posts yet</p>
+  //       <Link href='/submit'>Submit Post</Link>
+  //     </Styled.NoPosts>
+  //   );
 
   return (
     <Styled.Container>
@@ -106,6 +106,19 @@ const Home = () => {
             <Link href='/submit'>Submit Post</Link>
           </Styled.NoPosts>
         )} */}
+        {filteredPosts.map((post: PostProps) => (
+          <Post
+            key={post.postID}
+            num={filteredPosts.indexOf(post) + 1}
+            title={post.title}
+            url={post.url}
+            postId={post.postID}
+            upvotes={post.upvotes}
+            userPosted={post.author.userName}
+            timeCreated={post.timeCreated}
+            numberOfComments={post.comments.length}
+          />
+        ))}
         <p>Issue is here</p>
       </main>
     </Styled.Container>
