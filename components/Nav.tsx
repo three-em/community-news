@@ -139,11 +139,13 @@ const Nav = () => {
   const router = useRouter(),
     arconnect = useArconnect(),
     [isNotConnected, setIsNotConnected] = useState(false),
+    [connecting, setConnecting] = useState(false),
     { currentUser } = useGettUser(),
     navItems = Object.values(NavItemsProps),
     { users } = useGetAllData();
 
   const handleConnect = async () => {
+    setConnecting(true);
     await window.arweaveWallet.connect(
       ['ACCESS_ADDRESS', 'ACCESS_ALL_ADDRESSES', 'SIGN_TRANSACTION'],
       {
@@ -160,6 +162,7 @@ const Nav = () => {
       const { userName, walletAddress } = user;
       localStorage.setItem('user', JSON.stringify({ userName, walletAddress }));
       location.reload();
+      setConnecting(false);
     } else {
       Router.push('/connect');
     }
@@ -226,7 +229,9 @@ const Nav = () => {
                     install arConnect
                   </a>
                 ) : isNotConnected ? (
-                  <a onClick={handleConnect}>connect</a>
+                  <a onClick={handleConnect}>
+                    {connecting ? 'connecting' : 'connect'}
+                  </a>
                 ) : (
                   <a onClick={signOut}>| signout</a>
                 )}
