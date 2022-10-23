@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
 import useArconnect from 'use-arconnect';
@@ -8,7 +8,6 @@ import { PermissionType } from 'arconnect';
 import { UserProps } from '../types';
 import styled from 'styled-components';
 import { useGetAllData } from '../hooks/useGetAllData';
-import { fetchData } from '../utils/getData';
 
 interface ContainerProps {
   path: string;
@@ -136,19 +135,10 @@ const NavUsername = styled.a`
   text-decoration: none;
 `;
 
-export async function getServerSideProps() {
-  const { users } = await fetchData();
-
-  return {
-    props: {
-      users,
-    },
-  };
-}
-
 const Nav = () => {
   const router = useRouter(),
     arconnect = useArconnect(),
+    [isNotConnected, setIsNotConnected] = useState(false),
     { currentUser } = useGettUser(),
     navItems = Object.values(NavItemsProps),
     { users } = useGetAllData();
@@ -185,6 +175,10 @@ const Nav = () => {
     Router.push('/');
   };
 
+  useEffect(() => {
+    setIsNotConnected(!currentUser.userName && !currentUser.walletAddress);
+  });
+
   return (
     <>
       <Head>
@@ -219,22 +213,22 @@ const Nav = () => {
                 </ul>
               </NavItems>
               <NavConnect>
-                {currentUser.userName && currentUser.walletAddress ? (
+                {isNotConnected ? null : (
                   <>
                     <NavUsername href={`/user/${currentUser.userName}`}>
                       {currentUser.userName}
                     </NavUsername>
                   </>
-                ) : null}
+                )}
 
                 {arconnect === undefined ? (
                   <a onClick={() => window.open('https://arconnect.io')}>
                     install arConnect
                   </a>
-                ) : currentUser.userName && currentUser.walletAddress ? (
-                  <a onClick={signOut}>| signout</a>
-                ) : (
+                ) : isNotConnected ? (
                   <a onClick={handleConnect}>connect</a>
+                ) : (
+                  <a onClick={signOut}>| signout</a>
                 )}
               </NavConnect>
             </>
