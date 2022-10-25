@@ -206,12 +206,12 @@ const Nav = () => {
               <NavItems>
                 <ul>
                   {navItems.map((item: string, index) => (
-                    <>
-                      <li key={index}>
+                    <div key={index}>
+                      <li>
                         <Link href={`/${item}`}>{item}</Link>
+                        <span>|</span>
                       </li>
-                      <span>|</span>
-                    </>
+                    </div>
                   ))}
                 </ul>
               </NavItems>

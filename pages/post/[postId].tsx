@@ -1,9 +1,8 @@
 import Router from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import { useRouter } from 'next/router';
 import { PostProps } from '../../types';
-import { ThumbsupIcon } from '@primer/octicons-react';
 import { getShortUrl, getPostDate } from '../../utils/helpers';
 import { fetchData } from '../../utils/getData';
 import { useGettUser } from '../../hooks/useGetUser';
@@ -23,6 +22,7 @@ interface DataProps {
     replies: Reply[];
   };
 }
+
 export async function getServerSideProps() {
   const { posts } = await fetchData();
 
@@ -37,37 +37,16 @@ const ViewPost = ({ posts }: { posts: PostProps[] }) => {
   const router = useRouter(),
     { postId } = router.query,
     { currentUser } = useGettUser(),
-    [allPosts, setAllPosts] = useState(posts),
-    [refresh, setRefresh] = useState(false),
-    [post, setPost] = useState<PostProps>(),
+    [refreshedPosts, setRefreshedPosts] = useState([]),
     [posting, setPosting] = useState(false),
     [commentText, setCommentText] = useState(''),
     [addingFav, setAddingFav] = useState(false),
     { userName } = useGettUser().currentUser;
 
-  useEffect(() => {
-    (async () => {
-      const response = await fetch('/api/read', {
-        method: 'GET',
-      });
-      const all = await response.json();
-      const { posts } = all.data;
-      setAllPosts(posts);
-      setRefresh(false);
-    })();
-  }, [refresh]);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        setPost(() =>
-          allPosts.find((post: PostProps) => post.postID === postId)
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  }, [allPosts, postId]);
+  const post =
+    refreshedPosts.length > 0
+      ? refreshedPosts.find((post: PostProps) => post.postID === postId)
+      : posts.find((post: PostProps) => post.postID === postId);
 
   const handleComment = async () => {
     const data: DataProps = {
@@ -87,10 +66,15 @@ const ViewPost = ({ posts }: { posts: PostProps[] }) => {
       await fetch('/api/write-exm', {
         method: 'POST',
         body: JSON.stringify({ data }),
+      }).then(async (res) => {
+        const response = await res.json();
+        const { data } = response.data;
+        const { posts } = data.execution.state;
+
+        setCommentText('');
+        setPosting(false);
+        setRefreshedPosts(posts);
       });
-      setCommentText('');
-      setPosting(false);
-      setRefresh(true);
     } catch (error) {
       console.error(error);
     }
@@ -172,7 +156,7 @@ const ViewPost = ({ posts }: { posts: PostProps[] }) => {
                 <Comment
                   id={comment.id}
                   parentAuthor={post.author.userName}
-                  author={comment.author} // this is the problem
+                  author={comment.author}
                   timePosted={comment.timePosted}
                   text={comment.text}
                   postTitle={post.title}

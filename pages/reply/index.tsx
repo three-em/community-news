@@ -1,4 +1,3 @@
-import Router from 'next/router';
 import React, { useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import { useRouter } from 'next/router';
@@ -50,7 +49,7 @@ const Reply = () => {
 
       setReplying(false);
       setReply('');
-      Router.push(`/post/${postID}`);
+      router.push(`/post/${postID}`);
     } catch (error) {
       console.error(error);
     }
