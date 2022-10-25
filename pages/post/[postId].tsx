@@ -1,15 +1,16 @@
 import Router from 'next/router';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { v4 as uuid } from 'uuid';
 import { useRouter } from 'next/router';
 import { PostProps } from '../../types';
 import { getShortUrl, getPostDate } from '../../utils/helpers';
 import { fetchData } from '../../utils/getData';
 import { useGettUser } from '../../hooks/useGetUser';
-import { Reply } from '../../types/index';
+import { Reply, UserProps } from '../../types/index';
 import Comment from '../../components/Comment';
-import * as Styled from '../../styles/postView';
 import { Button } from '../../styles/common';
+import { useGetAllData } from '../../hooks/useGetAllData';
+import * as Styled from '../../styles/postView';
 
 interface DataProps {
   functionRole: string;
@@ -40,11 +41,18 @@ const ViewPost = ({ posts }: { posts: PostProps[] }) => {
       (replyAllPosts && JSON.parse(replyAllPosts as string)) ||
       (editAllPosts && JSON.parse(editAllPosts as string)),
     { currentUser } = useGettUser(),
+    [isNotConnected, setIsNotConnected] = useState(false),
     [refreshedPosts, setRefreshedPosts] = useState(routerQueryPosts || []),
     [posting, setPosting] = useState(false),
+    [connecting, setConnecting] = useState(false),
     [commentText, setCommentText] = useState(''),
     [addingFav, setAddingFav] = useState(false),
-    { userName } = useGettUser().currentUser;
+    { userName } = useGettUser().currentUser,
+    { users } = useGetAllData();
+
+  useEffect(() => {
+    setIsNotConnected(!currentUser.userName && !currentUser.walletAddress);
+  });
 
   const post =
     refreshedPosts.length > 0
@@ -99,6 +107,31 @@ const ViewPost = ({ posts }: { posts: PostProps[] }) => {
     setAddingFav(false);
   };
 
+  const handleConnect = async () => {
+    setConnecting(true);
+    await window.arweaveWallet.connect(
+      ['ACCESS_ADDRESS', 'ACCESS_ALL_ADDRESSES', 'SIGN_TRANSACTION'],
+      {
+        name: 'CommunityLabs News',
+      }
+    );
+
+    const address = await window.arweaveWallet.getActiveAddress();
+    const user = users.find(
+      (user: UserProps) => user.walletAddress === address
+    );
+
+    if (user) {
+      const { userName, walletAddress } = user;
+      localStorage.setItem('user', JSON.stringify({ userName, walletAddress }));
+      setConnecting(false);
+      location.reload();
+    } else {
+      setConnecting(false);
+      Router.push('/connect');
+    }
+  };
+
   return (
     <>
       {post ? (
@@ -139,12 +172,20 @@ const ViewPost = ({ posts }: { posts: PostProps[] }) => {
               }}
             ></Styled.TextArea>
 
-            <Styled.SubmitButton
-              onClick={handleComment}
-              disabled={!commentText}
-            >
-              {posting ? 'posting...' : 'add comment'}
-            </Styled.SubmitButton>
+            {isNotConnected ? (
+              <Styled.SubmitButton
+                onClick={handleConnect}
+              >
+                {connecting ? 'connecting...' : 'connect to add comment'}
+              </Styled.SubmitButton>
+            ) : (
+              <Styled.SubmitButton
+                onClick={handleComment}
+                disabled={!commentText}
+              >
+                {posting ? 'posting...' : 'add comment'}
+              </Styled.SubmitButton>
+            )}
           </>
         </Styled.Wrapper>
       ) : (
@@ -198,3 +239,5 @@ const ViewPost = ({ posts }: { posts: PostProps[] }) => {
 };
 
 export default ViewPost;
+
+// todo - create hook to handleConnect

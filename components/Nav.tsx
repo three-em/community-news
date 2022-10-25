@@ -161,9 +161,10 @@ const Nav = () => {
     if (user) {
       const { userName, walletAddress } = user;
       localStorage.setItem('user', JSON.stringify({ userName, walletAddress }));
-      location.reload();
       setConnecting(false);
+      location.reload();
     } else {
+      setConnecting(false);
       Router.push('/connect');
     }
   };

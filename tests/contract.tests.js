@@ -104,8 +104,8 @@ const testData = {
     input: {
       functionRole: 'editComment',
       postID: testPostId,
-      commentID: testCommentId,
-      editedComment: 'this is another edited comment'
+      commentID: testCommentId2,
+      editedComment: 'testing edit fi rill...again'
     }
   },
   deleteComment: {
@@ -186,7 +186,7 @@ const editComment = await TestFunction({
   functionSource: readFileSync('exm/contract.js'),
   functionType: FunctionType.JAVASCRIPT,
   functionInitState: initialState,
-  writes: [createWrite(testData.createPost.input), createWrite(testData.createComment.input), createWrite(testData.editComment.input)]
+  writes: [createWrite(testData.createPost.input), createWrite(testData.createComment.input), createWrite(testData.createReply.input), createWrite(testData.editComment.input)]
 })
 
 const deleteComment = await TestFunction({
@@ -207,5 +207,5 @@ assert(upVotePost.state.users, [testData.addUser.input, testData.createPost.inpu
 assert(downVotePost.state.users, [testData.addUser.input, testData.createPost.input, testData.upvote.input, testData.downvote.input]);
 assert(createComment.state.posts, [testData.createPost.input, testData.createComment.input,])
 assert(createReply.state.posts, [testData.createPost.input, testData.createComment.input, testData.createReply.input])
-assert(editComment.state.posts, [testData.createPost.input, testData.createComment.input, testData.editComment.input])
+assert(editComment.state.posts, [testData.createPost.input, testData.createComment.input, testData.createReply.input, testData.editComment.input])
 assert(deleteComment.state.posts, [testData.createPost.input, testData.createComment.input, testData.deleteComment.input])
