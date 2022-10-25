@@ -106,6 +106,7 @@ const Comment = ({
                     query: {
                       commentID: replyID,
                       postID,
+                      postTitle,
                     },
                   },
                   `/delete/${postID}`

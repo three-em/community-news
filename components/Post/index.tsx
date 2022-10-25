@@ -152,9 +152,19 @@ const Post = ({
       </Styled.PostInfo>
 
       <Styled.PostStats>
-        <p className='title'>
-          {title} {shortUrl ? <span>({shortUrl})</span> : null}
-        </p>
+        {url ? (
+          <a
+            className='title'
+            href={url}
+            rel='noopener noreferrer'
+            target='_blank'
+            style={{ textDecoration: 'none' }}
+          >
+            {title} {shortUrl ? <span>({shortUrl})</span> : null}
+          </a>
+        ) : (
+          <p className='title'>{title}</p>
+        )}
         <div className='authorInfo'>
           <p>
             {numberOfUpvotes} upvotes | posted by{' '}

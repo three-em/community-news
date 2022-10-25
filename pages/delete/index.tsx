@@ -10,7 +10,7 @@ const CustomWrapper = styled(Wrapper)`
 const Delete = () => {
   const router = useRouter();
   const { query } = router;
-  const { commentID, postID } = query;
+  const { commentID, postID, postTitle } = query;
   const [deleting, setDeleting] = useState(false);
 
   const handleDelete = async () => {
@@ -51,7 +51,7 @@ const Delete = () => {
 
   return (
     <CustomWrapper>
-      <p style={{ fontSize: '1.15rem' }}>post title</p>
+      <p style={{ fontSize: '1.15rem' }}>{postTitle}</p>
       <p style={{ fontSize: '1.15rem' }}>Do you want this to be deleted?</p>
       <div style={{ display: 'flex', gap: '1rem' }}>
         <button onClick={handleDelete}>
