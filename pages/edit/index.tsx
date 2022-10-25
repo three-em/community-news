@@ -11,26 +11,44 @@ const Edit = () => {
   const router = useRouter();
   const { query } = router;
   const { postTitle, text, id, postID } = query;
-  const [update, setUpdate] = useState('');
-  const [updating, setUpdating] = useState(false);
+  const [edit, setEdit] = useState('');
+  const [editing, setEditing] = useState(false);
 
   const handleEdit = async () => {
     const data = {
       functionRole: 'editComment',
       postID,
       commentID: id,
-      editedComment: update,
+      editedComment: edit,
     };
     try {
-      setUpdating(true);
+      setEditing(true);
       await fetch('/api/write-exm', {
         method: 'POST',
         body: JSON.stringify({ data }),
-      });
-      setUpdating(false);
-      setUpdate('');
-      Router.push(`/post/${postID}`);
-    } catch (error) {}
+      })
+        .then(async (res) => {
+          const response = await res.json();
+          const { data } = response.data;
+          const { posts } = data.execution.state;
+          setEdit('');
+          setEditing(false);
+          Router.push(
+            {
+              pathname: `/post/${postID}`,
+              query: {
+                editAllPosts: JSON.stringify([...posts]),
+              },
+            },
+            `/post/${postID}`
+          );
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -46,19 +64,19 @@ const Edit = () => {
           id='comment'
           cols={30}
           rows={10}
-          value={update}
+          value={edit}
           placeholder=''
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-            setUpdate(e.target.value);
+            setEdit(e.target.value);
           }}
         ></textarea>
 
         <button
           onClick={handleEdit}
-          disabled={!update}
+          disabled={!edit}
           style={{ display: 'block', marginTop: '1rem' }}
         >
-          {updating ? 'updating...' : 'update'}
+          {editing ? 'editing...' : 'edit'}
         </button>
       </>
     </CustomWrapper>

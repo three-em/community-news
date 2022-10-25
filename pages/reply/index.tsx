@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { v4 as uuid } from 'uuid';
-import { useRouter } from 'next/router';
+import Router, { useRouter } from 'next/router';
 import { getPostDate } from '../../utils/helpers';
 import { useGettUser } from '../../hooks/useGetUser';
 import { Wrapper } from '../../styles/common';
@@ -45,11 +45,26 @@ const Reply = () => {
       await fetch('/api/write-exm', {
         method: 'POST',
         body: JSON.stringify({ data }),
-      });
-
-      setReplying(false);
-      setReply('');
-      router.push(`/post/${postID}`);
+      })
+        .then(async (res) => {
+          const response = await res.json();
+          const { data } = response.data;
+          const { posts } = data.execution.state;
+          setReply('');
+          setReplying(false);
+          Router.push(
+            {
+              pathname: `/post/${postID}`,
+              query: {
+                replyAllPosts: JSON.stringify([...posts]),
+              },
+            },
+            `/post/${postID}`
+          );
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     } catch (error) {
       console.error(error);
     }

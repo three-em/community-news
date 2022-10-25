@@ -9,7 +9,8 @@ import * as Styled from './styles';
 
 interface Props {
   type?: 'comment' | 'reply';
-  id: string;
+  replyID: string;
+  editID: string;
   parentAuthor: string;
   author: string;
   timePosted: number;
@@ -19,7 +20,8 @@ interface Props {
 }
 const Comment = ({
   type,
-  id,
+  replyID,
+  editID,
   parentAuthor,
   author,
   timePosted,
@@ -53,7 +55,7 @@ const Comment = ({
   };
 
   return (
-    <Styled.Wrapper key={id}>
+    <Styled.Wrapper>
       <div style={{ fontSize: '0.9rem', fontStyle: 'italic' }}>
         replied by{' '}
         <a
@@ -83,7 +85,7 @@ const Comment = ({
                   {
                     pathname: '/edit',
                     query: {
-                      id,
+                      id: editID,
                       text,
                       postTitle,
                       postID,
@@ -102,7 +104,7 @@ const Comment = ({
                   {
                     pathname: '/delete',
                     query: {
-                      id,
+                      replyID, // to be implemented
                       text,
                       postTitle,
                       postID,
@@ -125,7 +127,7 @@ const Comment = ({
                 {
                   pathname: '/reply',
                   query: {
-                    commentID: id,
+                    commentID: replyID,
                     username: currentUser.userName,
                     timePosted: timePosted,
                     commentText: text,

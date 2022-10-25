@@ -35,9 +35,12 @@ export async function getServerSideProps() {
 
 const ViewPost = ({ posts }: { posts: PostProps[] }) => {
   const router = useRouter(),
-    { postId } = router.query,
+    { postId, replyAllPosts, editAllPosts, deleteAllPost } = router.query,
+    routerQueryPosts =
+      (replyAllPosts && JSON.parse(replyAllPosts as string)) ||
+      (editAllPosts && JSON.parse(editAllPosts as string)),
     { currentUser } = useGettUser(),
-    [refreshedPosts, setRefreshedPosts] = useState([]),
+    [refreshedPosts, setRefreshedPosts] = useState(routerQueryPosts || []),
     [posting, setPosting] = useState(false),
     [commentText, setCommentText] = useState(''),
     [addingFav, setAddingFav] = useState(false),
@@ -154,7 +157,8 @@ const ViewPost = ({ posts }: { posts: PostProps[] }) => {
             <div>
               <div>
                 <Comment
-                  id={comment.id}
+                  replyID={comment.id}
+                  editID={comment.id}
                   parentAuthor={post.author.userName}
                   author={comment.author}
                   timePosted={comment.timePosted}
@@ -173,7 +177,8 @@ const ViewPost = ({ posts }: { posts: PostProps[] }) => {
                   >
                     <Comment
                       type='reply'
-                      id={comment.id}
+                      replyID={comment.id}
+                      editID={reply.id} //
                       parentAuthor={post.author.userName}
                       author={reply.author}
                       timePosted={reply.timePosted}
