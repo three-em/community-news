@@ -57,16 +57,31 @@ const Submit = ({ users }: { users: UserProps[] }) => {
               comments: [],
             },
           }),
-        });
-
-        setFormData({
-          ...formData,
-          title: '',
-          url: '',
-          description: '',
-        });
-        setSubmitting(false);
-        Router.push('/');
+        })
+          .then(async (res) => {
+            const response = await res.json();
+            const { data } = response.data;
+            const { posts } = data.execution.state;
+            setFormData({
+              ...formData,
+              title: '',
+              url: '',
+              description: '',
+            });
+            setSubmitting(false);
+            Router.push(
+              {
+                pathname: '/',
+                query: {
+                  submitAllPosts: JSON.stringify([...posts]),
+                },
+              },
+              '/'
+            );
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       }
     } catch (error) {
       console.error(error);

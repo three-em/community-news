@@ -5,6 +5,7 @@ import Post from '../components/Post';
 import { PostProps, UserProps } from '../types';
 import { useGettUser } from '../hooks/useGetUser';
 import * as Styled from '../styles/home';
+import { useRouter } from 'next/router';
 
 const RenderPosts = ({ posts }: { posts: PostProps[] }) => (
   <>
@@ -35,6 +36,10 @@ const RenderPosts = ({ posts }: { posts: PostProps[] }) => (
 
 const Home = () => {
   const { currentUser } = useGettUser();
+  const router = useRouter();
+  const { submitAllPosts } = router.query;
+  const postsFromSubmit: PostProps[] =
+    submitAllPosts && JSON.parse(submitAllPosts as string);
 
   const {
     isLoading,
@@ -57,7 +62,7 @@ const Home = () => {
     }
   );
 
-  if (isLoading)
+  if (isLoading && !submitAllPosts)
     return (
       <Styled.Container>
         <p style={{ fontSize: '1rem' }}>Loading...</p>
@@ -79,10 +84,15 @@ const Home = () => {
       (user: UserProps) => user.userName === currentUser.userName
     );
 
-  const filteredPosts: PostProps[] = data.posts.filter(
-    (post: PostProps) =>
-      user.hidden.length > 0 && !user.hidden.includes(post.postID)
-  );
+  const filteredPosts: PostProps[] = !submitAllPosts
+    ? data.posts.filter(
+        (post: PostProps) =>
+          user.hidden.length > 0 && !user.hidden.includes(post.postID)
+      )
+    : postsFromSubmit.filter(
+        (post: PostProps) =>
+          user.hidden.length > 0 && !user.hidden.includes(post.postID)
+      );
 
   return (
     <Styled.Container>
@@ -95,6 +105,8 @@ const Home = () => {
       <main>
         {filteredPosts.length > 0 ? (
           <RenderPosts posts={filteredPosts} />
+        ) : postsFromSubmit && postsFromSubmit.length > 0 ? (
+          <RenderPosts posts={postsFromSubmit} />
         ) : (
           <RenderPosts posts={data.posts} />
         )}
