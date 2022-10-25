@@ -104,9 +104,7 @@ const Comment = ({
                   {
                     pathname: '/delete',
                     query: {
-                      replyID, // to be implemented
-                      text,
-                      postTitle,
+                      commentID: replyID,
                       postID,
                     },
                   },
