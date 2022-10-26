@@ -124,7 +124,24 @@ const Post = ({
             postID: postId,
           },
         }),
-      });
+      })
+        .then(async (res) => {
+          const response = await res.json();
+          const { data } = response.data;
+          const { posts } = data.execution.state;
+          Router.push(
+            {
+              pathname: `/user/${userName}/hidden`,
+              query: {
+                allPostsHidden: JSON.stringify([...posts]),
+              },
+            },
+            `/user/${userName}/hidden`
+          );
+        })
+        .catch((error) => {
+          console.error(error);
+        });
       Router.push(`/user/${userName}/hidden`);
       setHiding(false);
     }

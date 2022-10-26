@@ -42,10 +42,9 @@ const NavContainer = styled.div<ContainerProps>`
 
   > a {
     color: #fff;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     font-weight: 800;
     text-decoration: none;
-    font-family: Monoton, Courier;
   }
 
   @media (min-width: 1100px) {
@@ -80,7 +79,6 @@ const NavItems = styled.div`
     gap: 0.4rem;
     align-items: center;
     margin: 0;
-    margin-top: 0.4rem;
     padding: 0;
 
     li {
@@ -187,13 +185,13 @@ const Nav = () => {
     <>
       <Head>
         <link
-          href='https://fonts.googleapis.com/css2?family=Monoton&family=Poppins:wght@600&display=swap'
+          href='https://fonts.googleapis.com/css2?family=Monoton&family=Noto+Sans+Mono:wght@800&family=Poppins:wght@600&display=swap'
           rel='stylesheet'
-        />
+        ></link>
       </Head>
       <NavWrapper>
         <NavContainer path={router.pathname}>
-          <Link href='/'>Community News</Link>
+          <Link href='/'>CommunityNews</Link>
           {router.pathname === '/submit' ? (
             <SubmitNav>
               <p>/Submit</p>

@@ -67,10 +67,10 @@ const UpvotedPosts = () => {
 const HiddenPosts = () => {
   const { userName } = useGettUser().currentUser,
     { currentUser } = useGettUser(),
-    { username: queryingUser } = useRouter().query,
+    { username: queryingUser, allPostsHidden } = useRouter().query,
     { posts, users } = useGetAllData(),
     user = users.find((user) => user.userName === currentUser.userName),
-    hidden = user && user.hidden,
+    hidden = allPostsHidden ? allPostsHidden : user && user.hidden,
     userHidden = posts && posts.filter((post) => hidden?.includes(post.postID));
 
   return (

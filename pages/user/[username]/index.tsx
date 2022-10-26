@@ -17,11 +17,15 @@ const UserProfile = () => {
   const router = useRouter(),
     { username: queriedUser } = router.query,
     [bio, setBio] = useState(''),
+    [updatedBio, setUpdatedBio] = useState(''),
     [updating, setUpdating] = useState(false),
     { userName } = useGettUser().currentUser,
     { users } = useGetAllData();
 
-  const user = users.find((user) => (user.userName = queriedUser as string));
+  const queryUser = users.find((user) => user.userName === queriedUser);
+  const connectedUser = users.find((user) => user.userName === userName);
+
+  console.log('USER', connectedUser);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setBio(e.target.value);
@@ -39,15 +43,23 @@ const UserProfile = () => {
             bio,
           },
         }),
-      });
-      setUpdating(false);
-      setBio('');
+      })
+        .then(async (res) => {
+          const response = await res.json();
+          const { data } = response.data;
+          const { users } = data.execution.state;
+          const leUser = users.find((user) => user.userName === userName);
+          setUpdating(false);
+          setBio('');
+          setUpdatedBio(leUser.bio);
+        })
+        .catch((error) => console.error(error));
     } catch (error) {
       console.error(error);
     }
   };
 
-  if (!user)
+  if (!connectedUser || !queryUser)
     return (
       <Wrapper>
         <p>Loading</p>
@@ -59,15 +71,17 @@ const UserProfile = () => {
       {queriedUser === userName ? (
         <>
           <p>
-            user: <span>{user.userName}</span>
+            user: <span>{connectedUser.userName}</span>
           </p>
 
           <p>
             created:{' '}
-            <span>{moment(user.creationDate).format('MMMM, DD, YYYY')}</span>
+            <span>
+              {moment(connectedUser.creationDate).format('MMMM, DD, YYYY')}
+            </span>
           </p>
 
-          <p>current bio: {user.bio ? user.bio : 'no bio yet'}</p>
+          <p>current bio: {!updatedBio ? connectedUser.bio : updatedBio}</p>
           <p>
             about:{' '}
             <span>
@@ -83,8 +97,21 @@ const UserProfile = () => {
             </span>
           </p>
 
+          <button
+            style={{ marginTop: '1rem' }}
+            disabled={!bio || bio === connectedUser.bio}
+            onClick={submitBioUpdate}
+          >
+            {updating ? 'updating...' : 'update'}
+          </button>
+
           <div
-            style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1rem',
+              marginTop: '1rem',
+            }}
           >
             <a style={{ color: 'blue' }} href={`/user/${userName}/submissions`}>
               submissions
@@ -99,14 +126,6 @@ const UserProfile = () => {
               favorite submissions
             </a>
           </div>
-
-          <button
-            style={{ marginTop: '1rem' }}
-            disabled={!bio || bio === user.bio}
-            onClick={submitBioUpdate}
-          >
-            {updating ? 'updating...' : 'update'}
-          </button>
         </>
       ) : (
         <>
@@ -116,11 +135,13 @@ const UserProfile = () => {
 
           <p>
             created:{' '}
-            <span>{moment(user.creationDate).format('MMMM, DD, YYYY')}</span>
+            <span>
+              {moment(queryUser.creationDate).format('MMMM, DD, YYYY')}
+            </span>
           </p>
 
           <p>
-            about: <span>{user.bio}</span>
+            about: <span>{queryUser.bio}</span>
           </p>
 
           <div style={{ display: 'flex', flexDirection: 'column' }}>

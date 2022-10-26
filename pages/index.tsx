@@ -87,11 +87,11 @@ const Home = () => {
   const filteredPosts: PostProps[] = !submitAllPosts
     ? data.posts.filter(
         (post: PostProps) =>
-          user.hidden.length > 0 && !user.hidden.includes(post.postID)
+          user && user.hidden.length > 0 && !user.hidden.includes(post.postID)
       )
     : postsFromSubmit.filter(
         (post: PostProps) =>
-          user.hidden.length > 0 && !user.hidden.includes(post.postID)
+          user && user.hidden.length > 0 && !user.hidden.includes(post.postID)
       );
 
   return (

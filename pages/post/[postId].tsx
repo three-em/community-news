@@ -173,9 +173,7 @@ const ViewPost = ({ posts }: { posts: PostProps[] }) => {
             ></Styled.TextArea>
 
             {isNotConnected ? (
-              <Styled.SubmitButton
-                onClick={handleConnect}
-              >
+              <Styled.SubmitButton onClick={handleConnect}>
                 {connecting ? 'connecting...' : 'connect to add comment'}
               </Styled.SubmitButton>
             ) : (
@@ -218,14 +216,14 @@ const ViewPost = ({ posts }: { posts: PostProps[] }) => {
                   >
                     <Comment
                       type='reply'
+                      editID={reply.id}
+                      postID={post.postID}
                       replyID={comment.id}
-                      editID={reply.id} //
-                      parentAuthor={post.author.userName}
+                      parentAuthor={comment.author}
                       author={reply.author}
                       timePosted={reply.timePosted}
                       text={reply.text}
-                      postTitle={post.title}
-                      postID={post.postID}
+                      postTitle={reply.text}
                     />
                   </div>
                 );
@@ -239,5 +237,3 @@ const ViewPost = ({ posts }: { posts: PostProps[] }) => {
 };
 
 export default ViewPost;
-
-// todo - create hook to handleConnect

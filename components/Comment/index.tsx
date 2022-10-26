@@ -18,6 +18,15 @@ interface Props {
   postTitle: string;
   postID?: string;
 }
+
+const DeletedComment = () => {
+  return (
+    <Styled.Wrapper style={{ padding: '1rem' }}>
+      <p>comment deleted</p>
+    </Styled.Wrapper>
+  );
+};
+
 const Comment = ({
   type,
   replyID,
@@ -55,96 +64,104 @@ const Comment = ({
   };
 
   return (
-    <Styled.Wrapper>
-      <div style={{ fontSize: '0.9rem', fontStyle: 'italic' }}>
-        replied by{' '}
-        <a
-          href={`/user/${author}`}
-          style={{ color: 'green', cursor: 'pointer' }}
-        >
-          {author}
-        </a>{' '}
-        {getPostDate(timePosted)} ago |
-        {type === 'reply' ? (
-          <>
-            replying to{' '}
+    <>
+      {text === 'deleted' ? (
+        <DeletedComment />
+      ) : (
+        <Styled.Wrapper>
+          <div style={{ fontSize: '0.9rem', fontStyle: 'italic' }}>
+            replied by{' '}
             <a
-              href={`/user/${parentAuthor}`}
+              href={`/user/${author}`}
               style={{ color: 'green', cursor: 'pointer' }}
             >
-              @{parentAuthor}
+              {author}
             </a>{' '}
-            | &#x2198; thread |
-          </>
-        ) : null}
-        {currentUser.userName === author ? (
-          <>
-            <StyledButton
-              onClick={() => {
-                Router.push(
-                  {
-                    pathname: '/edit',
-                    query: {
-                      id: editID,
-                      text,
-                      postTitle,
-                      postID,
+            {getPostDate(timePosted)} ago |
+            {type === 'reply' ? (
+              <>
+                replying to{' '}
+                <a
+                  href={`/user/${parentAuthor}`}
+                  style={{ color: 'green', cursor: 'pointer' }}
+                >
+                  @{parentAuthor}
+                </a>{' '}
+                | &#x2198; thread |
+              </>
+            ) : null}
+
+            {currentUser.userName === author ? (
+              <>
+                <StyledButton
+                  onClick={() => {
+                    Router.push(
+                      {
+                        pathname: '/edit',
+                        query: {
+                          id: editID,
+                          text,
+                          postTitle,
+                          postID,
+                        },
+                      },
+                      `/edit/${postID}`
+                    );
+                  }}
+                >
+                  edit
+                </StyledButton>
+                |
+                <StyledButton
+                  onClick={() => {
+                    Router.push(
+                      {
+                        pathname: '/delete',
+                        query: {
+                          commentID: editID,
+                          postID,
+                          postTitle,
+                        },
+                      },
+                      `/delete/${postID}`
+                    );
+                  }}
+                >
+                  delete
+                </StyledButton>
+              </>
+            ) : null}
+          </div>
+
+          <Styled.CommentText>{text}</Styled.CommentText>
+          <StyledButton
+            onClick={() => {
+              currentUser.userName && currentUser.walletAddress
+                ? Router.push(
+                    {
+                      pathname: '/reply',
+                      query: {
+                        commentID: replyID,
+                        username: currentUser.userName,
+                        timePosted: timePosted,
+                        commentText: text,
+                        postTitle,
+                        postID,
+                        parentAuthor,
+                      },
                     },
-                  },
-                  `/edit/${postID}`
-                );
-              }}
-            >
-              edit
-            </StyledButton>
-            |
-            <StyledButton
-              onClick={() => {
-                Router.push(
-                  {
-                    pathname: '/delete',
-                    query: {
-                      commentID: replyID,
-                      postID,
-                      postTitle,
-                    },
-                  },
-                  `/delete/${postID}`
-                );
-              }}
-            >
-              delete
-            </StyledButton>
-          </>
-        ) : null}
-      </div>
-      <Styled.CommentText>{text}</Styled.CommentText>
-      <StyledButton
-        onClick={() => {
-          currentUser.userName && currentUser.walletAddress
-            ? Router.push(
-                {
-                  pathname: '/reply',
-                  query: {
-                    commentID: replyID,
-                    username: currentUser.userName,
-                    timePosted: timePosted,
-                    commentText: text,
-                    postTitle,
-                    postID,
-                    parentAuthor,
-                  },
-                },
-                `/reply/${postID}`
-              )
-            : handleConnect();
-        }}
-      >
-        {currentUser.userName && currentUser.walletAddress
-          ? 'reply'
-          : 'connect wallet to reply'}
-      </StyledButton>
-    </Styled.Wrapper>
+                    `/reply/${postID}`
+                  )
+                : handleConnect();
+            }}
+          >
+            {currentUser.userName && currentUser.walletAddress
+              ? 'reply'
+              : 'connect wallet to reply'}
+          </StyledButton>
+        </Styled.Wrapper>
+      )}
+    </>
   );
 };
 
