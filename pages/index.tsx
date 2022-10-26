@@ -97,9 +97,22 @@ const Home = () => {
   return (
     <Styled.Container>
       <Head>
-        <title>Community News</title>
-        <meta name='description' content='Community News' />
-        <link rel='icon' href='/favicon.ico' />
+        <title>Community News | Arweave</title>
+        <meta name="title" content="Community News | Arweave" />
+        <meta name="description" content="A place for Arweavers to discuss their latest thoughts, ideas, and questions." />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://news.communitylabs.com/" />
+        <meta property="og:title" content="Community News | Arweave" />
+        <meta property="og:description" content="A place for Arweavers to discuss their latest thoughts, ideas, and questions." />
+        <meta property="og:image" content="/header.jpg" />
+
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://news.communitylabs.com/" />
+        <meta property="twitter:title" content="Community News | Arweave" />
+        <meta property="twitter:description" content="A place for Arweavers to discuss their latest thoughts, ideas, and questions." />
+        <meta property="twitter:image" content="/header.jpg" />
+        <link rel="icon" type="image/png" href="https://arweave.net/HuDE37wlwN-gwdkoxaWOxXsvlJaaf8b9mA9BlHuPEqU" />      
       </Head>
 
       <main>
