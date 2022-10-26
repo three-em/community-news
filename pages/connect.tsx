@@ -88,6 +88,7 @@ const Connect = ({ users }: { users: UserProps[] }) => {
           JSON.stringify({ userName, walletAddress: address })
         );
         setConnecting(false);
+        location.reload();
       } catch (error) {
         console.error(error);
       }
@@ -95,6 +96,7 @@ const Connect = ({ users }: { users: UserProps[] }) => {
 
     if (!currentUser.userName && !currentUser.walletAddress && !userExists) {
       await postUser();
+      location.reload();
       Router.push('/');
     }
   };
