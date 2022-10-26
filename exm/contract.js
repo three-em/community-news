@@ -98,9 +98,15 @@ export function handle(state, action) {
         if (comment.id === commentID) {
           comment.text = editedComment;
         }
-        editComment(comment.replies, editedComment);
+
+        for (let reply of comment.replies) {
+          if (reply.id === commentID) {
+            reply.text = editedComment
+          }
+        }
       }
     }
+
     if (comments.length > 0) {
       editComment(comments, editedComment);
     };
@@ -109,20 +115,38 @@ export function handle(state, action) {
   if (functionRole === actions.DELETE_COMMENT) {
     const { postID, commentID } = action.input;
     const post = state.posts.find((post) => post.postID === postID);
+
     const { comments } = post;
 
-    const deleteComment = (comments, commentID) => {
-      let index = 0;
-      for (let comment of comments) {
-        index += 1;
+    const deleteComment = (commentsArr) => {
+      for (let comment of commentsArr) {
         if (comment.id === commentID) {
-          comments.splice(index - 1, 1)
+          comment.text = 'deleted'
+          delete comment.author
+          delete comment.timePosted
+
+          if (comment.parentCommentAuthor) {
+            delete comment.parentCommentAuthor
+          }
         }
-        deleteComment(comment.replies, commentID)
+
+        for (let reply of comment.replies) {
+          if (reply.id === commentID) {
+            reply.text = 'deleted'
+            delete reply.author
+            delete reply.timePosted
+
+            if (reply.parentCommentAuthor) {
+              delete reply.parentCommentAuthor
+            }
+          }
+        }
       }
     }
 
-    deleteComment(comments, commentID)
+    if (comments.length > 0) {
+      deleteComment(comments);
+    };
   }
 
   return { state };
