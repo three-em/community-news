@@ -15,7 +15,7 @@ const getPostDate = (time: number) => {
   } else if (timeDiff >= 86400000) {
     timeSincePost = `${Math.round(timeDiff / (1000 * 3600 * 24))} days`;
   } else {
-    timeSincePost = '1 miunte';
+    timeSincePost = '1 minute';
   }
 
   return timeSincePost;
